@@ -33,14 +33,15 @@
 .c-admin .ui .s i { height: 7px; border-radius: 4px; background: #C9CDB0; }
 .c-admin .ui .s i:first-child { background: var(--green); width: 74%; }
 .c-admin .ui .m { padding: 12px; display: grid; gap: 8px; align-content: start; }
-.c-admin .ui .m i { height: 18px; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
-.c-admin .ui .m i:nth-child(2) { width: 82%; }
+.c-admin .ui .r { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font-size: clamp(9.5px, 1.1vw, 12px); line-height: 1.2; color: var(--ink); white-space: nowrap; overflow: hidden; }
+.c-admin .ui .r em { font-style: normal; font-weight: 700; color: var(--green-ink); }
 .tile .c-price { background: #EFE7D6; }
 .c-price .p { display: flex; gap: 10px; align-items: flex-end; }
-.c-price .p i { display: block; width: clamp(48px, 9vw, 76px); border-radius: 10px; background: var(--paper-2); border: 1px solid var(--line); }
-.c-price .p i:nth-child(1) { height: clamp(70px, 11vw, 100px); }
-.c-price .p i:nth-child(2) { height: clamp(96px, 15vw, 136px); background: var(--green); border-color: var(--green); }
-.c-price .p i:nth-child(3) { height: clamp(82px, 13vw, 118px); }
+.c-price .p i { display: grid; align-content: center; justify-items: center; gap: 2px; width: clamp(74px, 11vw, 104px); padding: 12px 6px; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-style: normal; }
+.c-price .p i small { font-size: clamp(9.5px, 1vw, 11.5px); font-weight: 600; color: var(--muted); }
+.c-price .p i b { font-family: var(--body); font-size: clamp(14px, 1.7vw, 19px); font-weight: 600; font-variant-numeric: tabular-nums; }
+.c-price .p i:nth-child(2) { padding-block: 22px; background: var(--green); border-color: var(--green); }
+.c-price .p i:nth-child(2) small, .c-price .p i:nth-child(2) b { color: #fff; }
 .facts { list-style: none; margin: 0 auto; padding: 22px 0 0; max-width: 980px; width: 100%; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; text-align: center; }
 @media (max-width: 620px) { .facts { grid-template-columns: minmax(0, 1fr); } }
 .facts li { display: grid; gap: 2px; }
@@ -59,14 +60,9 @@
 <nav class="tiles" aria-label="Části návrhu">
 <a class="tile" href="web.html"><span class="card c-web"><span class="frame"><div><img src="img/hero-tartaletky.jpg" alt=""></div></span></span><span class="l">Web</span><span class="d">Celý návrh na proklikání</span></a>
 <a class="tile" href="logo.html"><span class="card c-logo"><svg viewBox="0 0 264 168" width="204" height="130" aria-hidden="true"><path d="M86 16A30 30 0 0 0 86 76Z" fill="#B5562E"></path><path d="M86 16A30 30 0 0 1 86 76Z" fill="#707A48"></path><rect x="82.5" y="14" width="7" height="106" fill="#2A211B"></rect><text x="18" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="52" lengthAdjust="spacingAndGlyphs">G</text><text x="99" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="150" lengthAdjust="spacingAndGlyphs">MMI</text><text x="14" y="158" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="38" font-weight="400" fill="#5A5C26" textLength="234" lengthAdjust="spacingAndGlyphs">lounge cafe</text></svg></span><span class="l">Logo</span><span class="d">Vaše logo jako ostrý vektor</span></a>
-<a class="tile" href="admin.html"><span class="card c-admin"><span class="ui" aria-hidden="true"><span class="s"><i></i><i></i><i></i><i></i></span><span class="m"><i></i><i></i><i></i><i></i></span></span></span><span class="l">Administrace</span><span class="d">Menu, otevírací doba, poukazy</span></a>
-<a class="tile" href="balicky.html"><span class="card c-price"><span class="p" aria-hidden="true"><i></i><i></i><i></i></span></span><span class="l">Balíčky a ceny</span><span class="d">Co je v ceně a kolik to stojí</span></a>
+<a class="tile" href="admin.html"><span class="card c-admin"><span class="ui" aria-hidden="true"><span class="s"><i></i><i></i><i></i><i></i></span><span class="m"><span class="r">Chléb Avokádo<em>249 Kč</em></span><span class="r">Po–Pá<em>7:30–19:00</em></span><span class="r">Poukaz GIM-4821<em>500 Kč</em></span><span class="r">Rezervace 14:00<em>4 os.</em></span></span></span></span><span class="l">Administrace</span><span class="d">Menu, otevírací doba, poukazy</span></a>
+<a class="tile" href="balicky.html"><span class="card c-price"><span class="p" aria-hidden="true"><i><small>Základ</small><b>14 000</b></i><i><small>Doporučený</small><b>22 000</b></i><i><small>Kompletní</small><b>28 000</b></i></span></span><span class="l">Balíčky a ceny</span><span class="d">Co je v ceně a kolik to stojí</span></a>
 </nav>
-<ul class="facts" aria-label="Jak to funguje">
-<li><b>Hotové do 4 týdnů</b><span>návrh už je připravený</span></li>
-<li><b>Úpravy do 3 pracovních dnů</b><span>napíšete, udělám</span></li>
-<li><b>Nebo si to upravíte sama</b><span>v jednoduché administraci</span></li>
-</ul>
 <p class="by"><a href="https://vojtechsvoboda.cz" target="_blank" rel="noopener">vojtechsvoboda.cz</a></p>
 </main>
 </body>
