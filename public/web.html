@@ -49,6 +49,15 @@ a{color:#5A5C26}a:hover{color:#2A211B}
 <template id="tpl">
 <div id="top" style="--acc: {{accFamily}}; --accst: {{accStyle}}; --accs: {{accScale}}; font-family: 'DM Sans', system-ui, -apple-system, sans-serif; font-size: 17px; line-height: 1.6; color: #2A211B; background: #F5EFE3; min-width: 0; overflow-x: clip;">
 
+<sc-if value="{{noticeOn}}" hint-placeholder-val="{{ true }}">
+<div role="note" style="background: #707A48; color: #FFFFFF; font-size: 14px; line-height: 1.45;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 40px); padding-left: max(68px, 4vw); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 18px; text-align: center;">
+<strong style="font-weight: 600;">Změna otevírací doby</strong>
+<span>Út 27.&nbsp;10. 7:30–14:00 (školíme se na ještě lepší kávu)</span>
+<span>St 28.&nbsp;10. státní svátek 8:30–16:00</span>
+</div>
+</div>
+</sc-if>
 <header style="position: sticky; top: 0; z-index: 40; background: rgba(245, 239, 227, 0.94); backdrop-filter: blur(10px); border-bottom: 1px solid #E3D9C4;">
 <div style="max-width: 1200px; margin: 0 auto; padding: 8px clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; column-gap: 28px; row-gap: 0px;">
 <a href="#top" aria-label="Gimmi lounge café – na začátek stránky" style="order: 1; display: inline-flex; align-items: center; min-height: 52px; color: #2A211B; text-decoration: none;"><svg viewBox="0 0 264 168" width="72" height="46" aria-hidden="true"><path d="M86 16A30 30 0 0 0 86 76Z" fill="#B5562E"></path><path d="M86 16A30 30 0 0 1 86 76Z" fill="#707A48"></path><rect x="82.5" y="14" width="7" height="106" fill="#2A211B"></rect><text x="18" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="52" lengthAdjust="spacingAndGlyphs">G</text><text x="99" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="150" lengthAdjust="spacingAndGlyphs">MMI</text><text x="14" y="158" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="38" font-weight="400" fill="#5A5C26" textLength="234" lengthAdjust="spacingAndGlyphs">lounge cafe</text></svg></a>
@@ -636,6 +645,9 @@ class Component extends DCLogic {
     } else if (todayHours && p.mins < todayHours[0]) {
       statusText = 'Otevíráme dnes v ' + fmt(todayHours[0]);
       statusShort = 'Otevíráme v ' + fmt(todayHours[0]);
+    } else if (p.day === 0) {
+      statusText = 'Dnes jen po domluvě · zavolejte nám';
+      statusShort = 'Neděle po domluvě';
     } else {
       for (let i = 1; i <= 7; i++) {
         const d = (p.day + i) % 7;
@@ -650,7 +662,7 @@ class Component extends DCLogic {
     const hours = [
       { label: 'Pondělí – pátek', time: '7:30 – 19:00', days: [1, 2, 3, 4, 5] },
       { label: 'Sobota', time: '8:30 – 16:00', days: [6] },
-      { label: 'Neděle', time: 'zavřeno', days: [0] },
+      { label: 'Neděle', time: 'jen po domluvě', days: [0] },
     ].map((r) => {
       const isToday = r.days.indexOf(p.day) !== -1;
       return { label: r.label, time: r.time, today: isToday, bg: isToday ? 'rgba(245, 239, 227, 0.10)' : 'transparent', weight: isToday ? '600' : '400' };
@@ -866,6 +878,7 @@ class Component extends DCLogic {
       dezPrev: () => this.setState({ dez: Math.max(0, di - 1) }),
       dezNext: () => this.setState({ dez: Math.min(dezMax, di + 1) }),
       gallery: gallery,
+      noticeOn: (function () { try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Prague' }).format(new Date()) <= '2026-10-28'; } catch (e) { return true; } })(),
       nav: [['dnes', 'Vitrína'], ['kava', 'Káva'], ['menu', 'Menu'], ['dezerty', 'Dezerty'], ['kavarna', 'Kavárna'], ['galerie', 'Galerie'], ['kontakt', 'Kontakt']].map((n) => ({
         href: '#' + n[0],
         label: n[1],
