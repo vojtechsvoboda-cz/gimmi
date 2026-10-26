@@ -62,7 +62,7 @@ section + section { margin-top: clamp(48px, 7vw, 80px); }
 .addon.static { cursor: default; border-style: dashed; }
 
 /* souhrn */
-.summary { flex: 1 1 300px; min-width: 0; position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); background: var(--green); color: #fff; padding: 24px; border-radius: 4px; display: grid; gap: 14px; }
+.summary { flex: 1 1 300px; min-width: 0; position: sticky; top: calc(20px + env(safe-area-inset-top, 0px)); background: var(--green); color: #fff; padding: 24px; border-radius: 4px; display: grid; gap: 14px; }
 .summary h2 { font-size: 26px; color: #fff; }
 .summary .line { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; font-variant-numeric: tabular-nums; }
 .summary .line span:first-child { color: rgba(255,255,255,.92); }
@@ -104,21 +104,6 @@ section + section { margin-top: clamp(48px, 7vw, 80px); }
 </style>
 </head>
 <body>
-<header class="topbar">
-<div class="wrap">
-<a class="mark" href="index.html" aria-label="Gimmi – přehled návrhu">
-<svg viewBox="0 0 100 104" width="28" height="29" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
-<span><b>Gimmi</b><small>návrh webu</small></span>
-</a>
-<nav class="crumbs" aria-label="Části návrhu">
-<a href="index.html">Přehled</a>
-<a href="web.html">Web</a>
-<a href="logo.html">Logo</a>
-<a href="admin.html">Administrace</a>
-<a href="balicky.html" aria-current="page">Balíčky a ceny</a>
-</nav>
-</div>
-</header>
 
 <main class="wrap">
 <div class="head">
@@ -365,5 +350,7 @@ section + section { margin-top: clamp(48px, 7vw, 80px); }
   all();
 })();
 </script>
+<a class="pitch-back" href="index.html"><span aria-hidden="true">&#8592;</span> Zpět</a>
+<style>.pitch-back{position:fixed;z-index:60;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#2A211B;color:#FBF8F1;font:600 14px/1 'DM Sans',system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 28px -12px rgba(42,33,27,.6)}.pitch-back:hover{background:#707A48;color:#fff}.pitch-back:focus-visible{outline:2px solid #B5562E;outline-offset:3px}</style>
 </body>
 </html>

@@ -9,163 +9,52 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&display=swap">
 <link rel="stylesheet" href="pitch.css">
 <style>
-.hero { padding-block: clamp(40px, 7vw, 88px) clamp(28px, 4vw, 48px); display: grid; gap: 18px; }
-.hero h1 { font-size: clamp(42px, 6.4vw, 80px); line-height: 0.98; }
-.hero h1 em { font-style: italic; color: var(--green-ink); }
-.modules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-@media (max-width: 680px) { .modules { grid-template-columns: minmax(0, 1fr); } }
-.module { position: relative; display: grid; grid-template-rows: auto 1fr; background: var(--paper); border: 1px solid var(--line); color: var(--ink); text-decoration: none; transition: transform .25s ease, box-shadow .25s ease; }
-.module:hover { transform: translateY(-4px); box-shadow: 0 28px 44px -30px rgba(42, 33, 27, 0.55); color: var(--ink); }
-.module .visual { aspect-ratio: 16 / 9; max-width: 100%; background: #EFE7D6; border-bottom: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; position: relative; }
-.module .body { padding: 22px 24px 24px; display: grid; gap: 8px; align-content: start; }
-.module h2 { font-size: 28px; }
-.module .go { margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--green-ink); }
-.module .go span { transition: transform .25s ease; }
-.module:hover .go span { transform: translateX(4px); }
-.module .tag { position: absolute; top: 14px; left: 14px; z-index: 2; }
-/* náhled webu */
-.v-web { width: 78%; padding: 6px; background: var(--gold); box-shadow: 0 20px 30px -22px rgba(42,33,27,.7); transform: rotate(-1.5deg); }
-.v-web div { padding: 8px; background: var(--paper); }
-.v-web img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-/* náhled loga */
-.v-logo { display: flex; align-items: center; gap: 14px; }
-.v-logo b { font-family: var(--display); font-weight: 600; font-size: clamp(44px, 6vw, 64px); line-height: .9; letter-spacing: -.03em; }
-.v-logo small { display: block; margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: .38em; text-transform: uppercase; color: var(--green-ink); }
-/* náhled administrace */
-.v-admin { width: 84%; height: 74%; display: grid; grid-template-columns: 28% 1fr; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: 0 20px 30px -24px rgba(42,33,27,.6); }
-.v-admin .side { background: var(--green); padding: 10px 8px; display: grid; gap: 6px; align-content: start; }
-.v-admin .side i { display: block; height: 7px; border-radius: 4px; background: rgba(255,255,255,.45); }
-.v-admin .side i:first-child { background: #fff; width: 70%; }
-.v-admin .main { padding: 10px; display: grid; gap: 7px; align-content: start; }
-.v-admin .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 10.5px; line-height: 1.2; }
-.v-admin .row em { font-style: normal; font-weight: 700; color: var(--green-ink); }
-/* náhled balíčků */
-.v-price { display: flex; gap: 10px; align-items: flex-end; }
-.v-price div { width: 74px; padding: 10px 8px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 10px; font-weight: 600; color: var(--muted); }
-.v-price div b { display: block; margin-top: 2px; font-family: var(--display); font-size: 17px; color: var(--ink); }
-.v-price div.mid { height: 112px; border-color: var(--green); background: var(--green); color: #fff; display: grid; align-content: center; }
-.v-price div.mid b { color: #fff; }
-.how { margin-top: clamp(48px, 7vw, 80px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px 32px; padding-top: 32px; border-top: 1px solid var(--line); }
-.how h3 { font-size: 22px; margin-bottom: 6px; }
-.how p { color: var(--ink-2); font-size: 15.5px; }
-.signed { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 22px 24px; background: var(--paper); border: 1px solid var(--line); }
-.signed p { flex: 1 1 280px; min-width: 0; font-size: 15.5px; color: var(--ink-2); }
-.signed strong { color: var(--ink); }
+.home { min-height: 100vh; display: grid; align-content: center; gap: clamp(32px, 5vw, 56px); padding-block: clamp(40px, 7vw, 96px); }
+.brand { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.brand h1 { font-size: clamp(34px, 4.4vw, 52px); }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); max-width: 980px; width: 100%; margin: 0 auto; }
+@media (max-width: 620px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+.tile { display: grid; gap: 14px; justify-items: center; color: var(--ink); text-decoration: none; }
+.tile .card { width: 100%; aspect-ratio: 4 / 3; max-width: 100%; border-radius: 22px; background: var(--paper); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+.tile:hover .card { transform: translateY(-6px) scale(1.01); box-shadow: 0 34px 50px -34px rgba(42, 33, 27, 0.55); }
+.tile span.l { font-size: 16px; font-weight: 600; letter-spacing: .01em; }
+.tile:hover span.l { color: var(--green-ink); }
+.tile .c-web { background: #EFE7D6; }
+.c-web .frame { width: 74%; padding: 7px; background: var(--gold); box-shadow: 0 24px 34px -24px rgba(42,33,27,.7); transform: rotate(-1.5deg); }
+.c-web .frame div { padding: 9px; background: var(--paper); }
+.c-web img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.tile .c-logo { background: var(--paper); }
+.tile .c-admin { background: var(--green); }
+.c-admin .ui { width: 76%; aspect-ratio: 16 / 10; display: grid; grid-template-columns: 26% 1fr; background: var(--paper-2); border-radius: 12px; overflow: hidden; box-shadow: 0 24px 36px -24px rgba(0,0,0,.45); }
+.c-admin .ui .s { background: #E6E8D6; padding: 12px 8px; display: grid; gap: 7px; align-content: start; }
+.c-admin .ui .s i { height: 7px; border-radius: 4px; background: #C9CDB0; }
+.c-admin .ui .s i:first-child { background: var(--green); width: 74%; }
+.c-admin .ui .m { padding: 12px; display: grid; gap: 8px; align-content: start; }
+.c-admin .ui .m i { height: 18px; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
+.c-admin .ui .m i:nth-child(2) { width: 82%; }
+.tile .c-price { background: #EFE7D6; }
+.c-price .p { display: flex; gap: 10px; align-items: flex-end; }
+.c-price .p i { display: block; width: clamp(48px, 9vw, 76px); border-radius: 10px; background: var(--paper-2); border: 1px solid var(--line); }
+.c-price .p i:nth-child(1) { height: clamp(70px, 11vw, 100px); }
+.c-price .p i:nth-child(2) { height: clamp(96px, 15vw, 136px); background: var(--green); border-color: var(--green); }
+.c-price .p i:nth-child(3) { height: clamp(82px, 13vw, 118px); }
+.by { text-align: center; font-size: 13px; color: var(--muted); }
+.by a { color: var(--muted); }
 </style>
 </head>
 <body>
-<header class="topbar">
-<div class="wrap">
-<a class="mark" href="index.html" aria-label="Gimmi – přehled návrhu">
-<svg viewBox="0 0 100 104" width="28" height="29" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
-<span><b>Gimmi</b><small>návrh webu</small></span>
-</a>
-<nav class="crumbs" aria-label="Části návrhu">
-<a href="index.html" aria-current="page">Přehled</a>
-<a href="web.html">Web</a>
-<a href="logo.html">Logo</a>
-<a href="admin.html">Administrace</a>
-<a href="balicky.html">Balíčky a ceny</a>
+<main class="wrap home">
+<div class="brand">
+<svg viewBox="0 0 100 104" width="40" height="42" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
+<h1>Gimmi</h1>
+</div>
+<nav class="tiles" aria-label="Části návrhu">
+<a class="tile" href="web.html"><span class="card c-web"><span class="frame"><div><img src="img/hero-tartaletky.jpg" alt=""></div></span></span><span class="l">Web</span></a>
+<a class="tile" href="logo.html"><span class="card c-logo"><svg viewBox="0 0 100 104" width="96" height="100" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#FBF8F1" stroke-width="3"></path></g></svg></span><span class="l">Logo</span></a>
+<a class="tile" href="admin.html"><span class="card c-admin"><span class="ui" aria-hidden="true"><span class="s"><i></i><i></i><i></i><i></i></span><span class="m"><i></i><i></i><i></i><i></i></span></span></span><span class="l">Administrace</span></a>
+<a class="tile" href="balicky.html"><span class="card c-price"><span class="p" aria-hidden="true"><i></i><i></i><i></i></span></span><span class="l">Balíčky a ceny</span></a>
 </nav>
-</div>
-</header>
-
-<main class="wrap">
-<section class="hero">
-<p class="eyebrow">Gimmi lounge café · návrh z října 2026</p>
-<h1>Nový web pro <em>Gimmi</em></h1>
-<p class="lede">Připravil jsem návrh, jak by mohl vypadat nový web kavárny. Všechno je klikací, takže si můžete vyzkoušet web, prohlédnout logo, podívat se, jak byste si web upravovala sama, a vybrat, co z toho dává smysl.</p>
-</section>
-
-<div class="modules">
-<a class="module" href="web.html">
-<div class="visual"><div class="v-web"><div><img src="img/hero-tartaletky.jpg" alt="" loading="lazy"></div></div></div>
-<div class="body">
-<p class="eyebrow">Hlavní část</p>
-<h2>Návrh webu</h2>
-<p class="muted">Jedna přehledná stránka s menu, dnešní vitrínou z Instagramu, dezerty, galerií, mapou a rezervací stolu.</p>
-<span class="go">Prohlédnout web <span aria-hidden="true">&#8594;</span></span>
-</div>
-</a>
-
-<a class="module" href="logo.html">
-<div class="visual">
-<div class="v-logo">
-<svg viewBox="0 0 100 104" width="70" height="73" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#EFE7D6" stroke-width="3"></path></g></svg>
-<div><b>Gimmi</b><small>lounge café</small></div>
-</div>
-</div>
-<div class="body">
-<p class="eyebrow">Bonus</p>
-<h2>Návrh loga</h2>
-<p class="muted">Jen inspirace navíc: současné zrno ze dvou půlek, čistší a modernější. Nic povinného, web funguje i se stávajícím logem.</p>
-<span class="go">Prohlédnout logo <span aria-hidden="true">&#8594;</span></span>
-</div>
-</a>
-
-<a class="module" href="admin.html">
-<div class="visual">
-<div class="v-admin" aria-hidden="true">
-<div class="side"><i></i><i></i><i></i><i></i><i></i></div>
-<div class="main">
-<div class="row">Chléb Avokádo <em>249 Kč</em></div>
-<div class="row">Po–Pá <em>7:30–19:00</em></div>
-<div class="row">Poukaz GIM-4821 <em>500 Kč</em></div>
-<div class="row">Rezervace 14:00 <em>4 os.</em></div>
-</div>
-</div>
-</div>
-<div class="body">
-<p class="eyebrow">Ukázka</p>
-<h2>Administrace</h2>
-<p class="muted">Jak byste si sama upravila menu, otevírací dobu, oznámení, poukazy nebo rezervace. Vyzkoušejte si to, nic se nikam neuloží.</p>
-<span class="go">Vyzkoušet administraci <span aria-hidden="true">&#8594;</span></span>
-</div>
-</a>
-
-<a class="module" href="balicky.html">
-<div class="visual">
-<div class="v-price" aria-hidden="true">
-<div>Základ<b>14 000</b></div>
-<div class="mid">Doporučený<b>22 000</b></div>
-<div>Kompletní<b>28 000</b></div>
-</div>
-</div>
-<div class="body">
-<p class="eyebrow">Rozhodnutí</p>
-<h2>Balíčky a ceny</h2>
-<p class="muted">Tři balíčky, moduly navíc a kalkulačka. Uvidíte, co je v ceně, kolik to stojí jednorázově a co měsíčně.</p>
-<span class="go">Projít balíčky <span aria-hidden="true">&#8594;</span></span>
-</div>
-</a>
-</div>
-
-<section class="how" aria-label="Jak spolupráce funguje">
-<div>
-<h3>Můžu začít hned</h3>
-<p>Návrh je hotový, takže stačí doladit detaily podle vás a web může běžet během pár týdnů.</p>
-</div>
-<div>
-<h3>Úpravy do 3 pracovních dnů</h3>
-<p>Když budete chtít něco změnit, napíšete mi a drobné úpravy mám hotové do tří pracovních dnů v rámci péče.</p>
-</div>
-<div>
-<h3>Nebo si to upravíte sama</h3>
-<p>Menu, otevírací dobu, oznámení i poukazy si můžete měnit v jednoduché administraci. Denní nabídka se bere sama z Instagramu.</p>
-</div>
-</section>
-
-<div class="signed">
-<p><strong>Vojtěch Svoboda</strong> · webdesign a vývoj. Na cokoliv se zeptejte, rád všechno projdu osobně u kávy.</p>
-<a class="btn" href="https://vojtechsvoboda.cz" target="_blank" rel="noopener">vojtechsvoboda.cz</a>
-</div>
+<p class="by"><a href="https://vojtechsvoboda.cz" target="_blank" rel="noopener">vojtechsvoboda.cz</a></p>
 </main>
-
-<footer class="site-foot">
-<div class="wrap">
-<span>Návrh pro Gimmi lounge café, Slovanské náměstí, Brno</span>
-<span>Připravil <a href="https://vojtechsvoboda.cz" target="_blank" rel="noopener">vojtechsvoboda.cz</a></span>
-</div>
-</footer>
 </body>
 </html>

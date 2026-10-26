@@ -12,7 +12,7 @@
 .demo-note { background: var(--warn-soft); color: #6A4A0C; font-size: 14px; }
 .demo-note .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
 .app { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding-block: 28px 40px; }
-.side { flex: 1 1 210px; max-width: 250px; min-width: 0; position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); display: grid; gap: 4px; }
+.side { flex: 1 1 210px; max-width: 250px; min-width: 0; position: sticky; top: calc(20px + env(safe-area-inset-top, 0px)); display: grid; gap: 4px; }
 .side button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: 500 15px/1 var(--body); text-align: left; cursor: pointer; transition: background-color .2s ease; }
 .side button:hover { background: #EFE7D6; }
 .side button[aria-current="page"] { background: var(--green); color: #fff; }
@@ -76,21 +76,6 @@ td.num { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
-<header class="topbar">
-<div class="wrap">
-<a class="mark" href="index.html" aria-label="Gimmi – přehled návrhu">
-<svg viewBox="0 0 100 104" width="28" height="29" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
-<span><b>Gimmi</b><small>administrace</small></span>
-</a>
-<nav class="crumbs" aria-label="Části návrhu">
-<a href="index.html">Přehled</a>
-<a href="web.html">Web</a>
-<a href="logo.html">Logo</a>
-<a href="admin.html" aria-current="page">Administrace</a>
-<a href="balicky.html">Balíčky a ceny</a>
-</nav>
-</div>
-</header>
 <div class="demo-note"><div class="wrap"><strong>Ukázka.</strong><span>Data jsou smyšlená a nic se nikam neukládá, klidně si všechno vyzkoušejte.</span></div></div>
 
 <div class="wrap app">
@@ -300,5 +285,7 @@ td.num { font-variant-numeric: tabular-nums; }
   render();
 })();
 </script>
+<a class="pitch-back" href="index.html"><span aria-hidden="true">&#8592;</span> Zpět</a>
+<style>.pitch-back{position:fixed;z-index:60;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#2A211B;color:#FBF8F1;font:600 14px/1 'DM Sans',system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 28px -12px rgba(42,33,27,.6)}.pitch-back:hover{background:#707A48;color:#fff}.pitch-back:focus-visible{outline:2px solid #B5562E;outline-offset:3px}</style>
 </body>
 </html>
