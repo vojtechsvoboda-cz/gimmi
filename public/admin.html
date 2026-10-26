@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Gimmi – ukázka administrace</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&display=swap">
+<link rel="stylesheet" href="pitch.css">
+<style>
+.demo-note { background: var(--warn-soft); color: #6A4A0C; font-size: 14px; }
+.demo-note .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+.app { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding-block: 28px 40px; }
+.side { flex: 1 1 210px; max-width: 250px; min-width: 0; position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); display: grid; gap: 4px; }
+.side button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: 500 15px/1 var(--body); text-align: left; cursor: pointer; transition: background-color .2s ease; }
+.side button:hover { background: #EFE7D6; }
+.side button[aria-current="page"] { background: var(--green); color: #fff; }
+.side button .count { margin-left: auto; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--terra-2); color: #fff; }
+.main { flex: 999 1 560px; min-width: 0; display: grid; gap: 20px; }
+.main h1 { font-size: clamp(30px, 3.6vw, 40px); }
+.panel { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 14px; }
+.panel h2 { font-size: 22px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; }
+.stat { display: grid; gap: 4px; }
+.stat b { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; color: var(--muted); }
+.row-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+label.f { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+.in, select.in, textarea.in { width: 100%; min-height: 42px; padding: 8px 12px; border: 1px solid #CFC5AE; border-radius: 8px; background: #fff; color: var(--ink); font: 400 15px/1.4 var(--body); }
+textarea.in { min-height: 76px; resize: vertical; }
+.in:focus { outline: 2px solid var(--green); outline-offset: 0; border-color: var(--green); }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tabs button { min-height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid #CFC5AE; background: transparent; font: 600 14px/1 var(--body); color: var(--ink); cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.items { display: grid; gap: 8px; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) 110px auto auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.item.off { opacity: .55; }
+.item .in { min-height: 38px; }
+.item .price { text-align: right; font-variant-numeric: tabular-nums; }
+.tog { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.tog input { width: 18px; height: 18px; accent-color: var(--green); }
+@media (max-width: 620px) { .item { grid-template-columns: minmax(0, 1fr) 96px; } .item .tog { grid-column: span 1; } }
+.hours { display: grid; gap: 8px; }
+.hours .h { display: grid; grid-template-columns: 110px 1fr 1fr auto; gap: 10px; align-items: center; }
+@media (max-width: 560px) { .hours .h { grid-template-columns: 1fr 1fr; } .hours .h b { grid-column: span 2; } }
+.banner-prev { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 8px 16px; background: var(--green); color: #fff; font-size: 14.5px; font-weight: 600; border-radius: 6px; text-align: center; }
+.webprev { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); }
+.webprev .bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--line); background: var(--paper); }
+.webprev .bar i { width: 8px; height: 8px; border-radius: 50%; background: #D9CFBB; }
+.webprev .content { padding: 16px; display: grid; gap: 6px; }
+.posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 14px; }
+.post { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; display: grid; }
+.post img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.post .b { padding: 10px 12px 12px; display: grid; gap: 8px; font-size: 13.5px; }
+.voucher-wrap { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.voucher-form { flex: 1 1 280px; min-width: 0; display: grid; gap: 12px; }
+.voucher-prev { flex: 1 1 320px; min-width: 0; }
+.voucher { padding: 8px; background: var(--gold); box-shadow: 0 24px 40px -26px rgba(42,33,27,.6); }
+.voucher .in-v { background: var(--paper); padding: 22px 22px 18px; display: grid; gap: 10px; text-align: center; border: 1px solid rgba(140,106,58,.35); }
+.voucher .t { font-size: 11px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase; color: var(--terra); }
+.voucher .v { font-family: var(--display); font-size: clamp(36px, 5vw, 48px); line-height: 1; }
+.voucher .w { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--green-ink); }
+.voucher .msg { font-size: 14.5px; color: var(--ink-2); }
+.voucher .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; padding-top: 10px; border-top: 1px dashed #C9BB9C; font-size: 12.5px; color: var(--muted); }
+.voucher .code { font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-weight: 700; letter-spacing: .08em; color: var(--ink); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td.num { font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 6px; }
+.toast { position: fixed; z-index: 70; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding: 12px 18px; border-radius: 10px; background: var(--ink); color: #fff; font-weight: 600; font-size: 14.5px; box-shadow: 0 16px 30px -14px rgba(0,0,0,.5); transform: translateY(12px); opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events: none; }
+.toast.show { opacity: 1; transform: none; }
+@media (max-width: 720px) { .side { position: static; max-width: none; flex-basis: 100%; display: flex; overflow-x: auto; gap: 6px; } .side button { flex: none; width: auto; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="wrap">
+<a class="mark" href="index.html" aria-label="Gimmi – přehled návrhu">
+<svg viewBox="0 0 100 104" width="28" height="29" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
+<span><b>Gimmi</b><small>administrace</small></span>
+</a>
+<nav class="crumbs" aria-label="Části návrhu">
+<a href="index.html">Přehled</a>
+<a href="web.html">Web</a>
+<a href="logo.html">Logo</a>
+<a href="admin.html" aria-current="page">Administrace</a>
+<a href="balicky.html">Balíčky a ceny</a>
+</nav>
+</div>
+</header>
+<div class="demo-note"><div class="wrap"><strong>Ukázka.</strong><span>Data jsou smyšlená a nic se nikam neukládá, klidně si všechno vyzkoušejte.</span></div></div>
+
+<div class="wrap app">
+<nav class="side" aria-label="Sekce administrace" id="side"></nav>
+<main class="main" id="main"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var kc = function (n) { return Number(n).toLocaleString('cs-CZ') + ' Kč'; };
+  var toastT;
+  function toast(t) { var el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('show'); }, 1800); }
+
+  var S = {
+    view: 'prehled',
+    cat: 'snidane',
+    menu: {
+      snidane: [
+        { n: 'Chléb Avokádo', p: 249, tip: true, on: true }, { n: 'Chléb Avokádo speciál', p: 249, tip: true, on: true },
+        { n: 'Quiche', p: 179, tip: true, on: true }, { n: 'Sázená vejce', p: 159, on: true }, { n: 'Turecká vejce', p: 179, on: true },
+        { n: 'Anglická snídaně', p: 249, on: true }, { n: 'Chléb Tuňák-avokádo', p: 249, on: true }, { n: 'Buchtičky s krémem', p: 199, on: true }
+      ],
+      kava: [
+        { n: 'Espresso / lungo', p: 62, on: true }, { n: 'Cappuccino', p: 78, on: true }, { n: 'Flat white', p: 98, on: true },
+        { n: 'Pumpkin spice latte', p: 92, tip: true, on: true }, { n: 'Bezkofeinová káva', p: 64, on: true }
+      ],
+      napoje: [
+        { n: 'Limonáda dle nabídky 0,5 l', p: 89, on: true }, { n: 'Kombuchová limonáda', p: 95, on: true }, { n: 'Fresh pomeranč 0,2 l', p: 95, on: true }
+      ]
+    },
+    hours: [
+      { d: 'Pondělí–pátek', o: '07:30', c: '19:00', open: true }, { d: 'Sobota', o: '08:30', c: '16:00', open: true }, { d: 'Neděle', o: '', c: '', open: false }
+    ],
+    notice: { on: true, text: 'Ve středu 28. 10. je státní svátek, máme zavřeno. Od čtvrtka jako obvykle.' },
+    posts: [
+      { img: 'img/post-1910.jpg', t: 'Krásné pondělní ráno z Gimmi!', d: '19. 10.', show: true, pin: false },
+      { img: 'img/post-1510.jpg', t: 'Krásný čtvrtek, přátelé!', d: '15. 10.', show: true, pin: false },
+      { img: 'img/g-havel.jpg', t: 'Dnes vzpomínáme. Václav Havel (90)', d: '5. 10.', show: true, pin: false },
+      { img: 'img/g-havel-dezert.jpg', t: 'Buchtičky s krémem jsou zpět', d: '6. 10.', show: true, pin: false }
+    ],
+    vouchers: [
+      { code: 'GIM-4821', v: '500 Kč', who: 'Pro Janu', until: '31. 12. 2026', used: false },
+      { code: 'GIM-3174', v: 'Snídaně pro dva', who: 'Pro Petra a Evu', until: '30. 11. 2026', used: true },
+      { code: 'GIM-9056', v: '1 000 Kč', who: 'Pro tatínka', until: '31. 1. 2027', used: false }
+    ],
+    vf: { type: 'castka', amount: '500', item: 'Snídaně pro dva', who: 'Pro Martinu', msg: 'Všechno nejlepší k narozeninám!', until: '2027-01-31' },
+    res: [
+      { n: 'Kateřina N.', d: 'čt 29. 10.', t: '09:00', p: 2, note: 'Pracovní snídaně', st: 'nova' },
+      { n: 'Tomáš B.', d: 'čt 29. 10.', t: '14:00', p: 4, note: '', st: 'nova' },
+      { n: 'Lucie M.', d: 'pá 30. 10.', t: '10:30', p: 6, note: 'Oslava, dort s sebou', st: 'potvrzena' },
+      { n: 'Jan P.', d: 'so 31. 10.', t: '09:30', p: 3, note: '', st: 'potvrzena' }
+    ]
+  };
+  var views = [
+    ['prehled', 'Přehled'], ['menu', 'Menu a ceny'], ['doba', 'Otevírací doba'], ['instagram', 'Instagram'], ['poukazy', 'Dárkové poukazy'], ['rezervace', 'Rezervace']
+  ];
+
+  function side() {
+    var nova = S.res.filter(function (r) { return r.st === 'nova'; }).length;
+    $('#side').innerHTML = views.map(function (v) {
+      return '<button type="button" data-view="' + v[0] + '"' + (S.view === v[0] ? ' aria-current="page"' : '') + '>' + v[1] +
+        (v[0] === 'rezervace' && nova ? '<span class="count">' + nova + '</span>' : '') + '</button>';
+    }).join('');
+  }
+
+  var R = {};
+  R.prehled = function () {
+    var nova = S.res.filter(function (r) { return r.st === 'nova'; }).length;
+    var vyd = S.vouchers.length, upl = S.vouchers.filter(function (v) { return v.used; }).length;
+    var top = S.posts.filter(function (p) { return p.show; })[0];
+    return '<div class="row-head"><h1>Dobrý den</h1><span class="chip ok dot">Web běží</span></div>' +
+      '<div class="grid">' +
+      '<div class="panel stat"><span>Nové rezervace</span><b>' + nova + '</b><button class="btn small" data-go="rezervace" type="button">Zobrazit</button></div>' +
+      '<div class="panel stat"><span>Poukazy vydané / uplatněné</span><b>' + vyd + ' / ' + upl + '</b><button class="btn small" data-go="poukazy" type="button">Nový poukaz</button></div>' +
+      '<div class="panel stat"><span>Oznámení na webu</span><b style="font-size:22px">' + (S.notice.on ? 'Zapnuté' : 'Vypnuté') + '</b><button class="btn small" data-go="doba" type="button">Upravit</button></div>' +
+      '</div>' +
+      (top ? '<div class="panel"><div class="row-head"><h2>Teď ve Vitríně na webu</h2><span class="chip">Z Instagramu, automaticky</span></div>' +
+      '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><img src="' + top.img + '" alt="" style="width:84px;height:84px;object-fit:cover;border-radius:8px"><div style="min-width:0;flex:1 1 200px"><b>' + esc(top.t) + '</b><p class="muted" style="font-size:14px">Příspěvek z ' + top.d + '. Nový příspěvek se na webu objeví sám do 15 minut.</p></div></div></div>' : '');
+  };
+  R.menu = function () {
+    var cats = [['snidane', 'Snídaně'], ['kava', 'Káva'], ['napoje', 'Nápoje']];
+    var list = S.menu[S.cat];
+    return '<div class="row-head"><h1>Menu a ceny</h1><button class="btn small primary" type="button" data-act="add-item">+ Přidat položku</button></div>' +
+      '<div class="tabs">' + cats.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (S.cat === c[0]) + '">' + c[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="panel"><p class="muted" style="font-size:14px">Změny se na webu projeví hned po uložení. „Skrýt“ se hodí, když něco dojde.</p><div class="items">' +
+      list.map(function (it, i) {
+        return '<div class="item' + (it.on ? '' : ' off') + '">' +
+          '<input class="in" aria-label="Název položky" data-i="' + i + '" data-k="n" value="' + esc(it.n) + '">' +
+          '<input class="in price" aria-label="Cena v Kč" inputmode="numeric" data-i="' + i + '" data-k="p" value="' + it.p + '">' +
+          '<label class="tog"><input type="checkbox" data-i="' + i + '" data-k="tip"' + (it.tip ? ' checked' : '') + '>Gimmi tip</label>' +
+          '<label class="tog"><input type="checkbox" data-i="' + i + '" data-k="on"' + (it.on ? '' : ' checked') + '>Skrýt</label></div>';
+      }).join('') + '</div><div><button class="btn small primary" type="button" data-act="save">Uložit změny</button></div></div>';
+  };
+  R.doba = function () {
+    return '<h1>Otevírací doba a oznámení</h1>' +
+      '<div class="panel"><h2>Běžná otevírací doba</h2><div class="hours">' + S.hours.map(function (h, i) {
+        return '<div class="h"><b>' + h.d + '</b><input class="in" type="time" aria-label="Otevíráme" data-h="' + i + '" data-k="o" value="' + h.o + '"' + (h.open ? '' : ' disabled') + '><input class="in" type="time" aria-label="Zavíráme" data-h="' + i + '" data-k="c" value="' + h.c + '"' + (h.open ? '' : ' disabled') + '><label class="tog"><input type="checkbox" data-h="' + i + '" data-k="open"' + (h.open ? '' : ' checked') + '>Zavřeno</label></div>';
+      }).join('') + '</div><div><button class="btn small primary" type="button" data-act="save">Uložit</button></div></div>' +
+      '<div class="panel"><div class="row-head"><h2>Oznámení na webu</h2><label class="tog"><input type="checkbox" data-act="notice-on"' + (S.notice.on ? ' checked' : '') + '>Zobrazit na webu</label></div>' +
+      '<label class="f" for="notice">Text oznámení<textarea class="in" id="notice" data-act="notice-text">' + esc(S.notice.text) + '</textarea></label>' +
+      '<div class="webprev" aria-label="Náhled na webu"><div class="bar"><i></i><i></i><i></i><span>gimmicafe.cz · náhled</span></div><div class="content">' +
+      (S.notice.on ? '<div class="banner-prev" id="bprev">' + esc(S.notice.text) + '</div>' : '<p class="muted" style="font-size:14px">Oznámení je vypnuté, na webu se nezobrazí.</p>') +
+      '<p style="font-family:var(--display);font-size:24px;margin-top:8px">Dobré ráno z Gimmi</p></div></div></div>';
+  };
+  R.instagram = function () {
+    return '<div class="row-head"><h1>Instagram</h1><span class="chip ok dot">Napojeno na @gimmicafe</span></div>' +
+      '<div class="panel"><p class="muted" style="font-size:14.5px">Nové příspěvky se na web načítají samy. Tady můžete některý skrýt nebo připnout do Vitríny, když chcete, aby tam zůstal déle.</p>' +
+      '<div class="posts">' + S.posts.map(function (p, i) {
+        return '<div class="post"><img src="' + p.img + '" alt=""><div class="b"><b>' + esc(p.t) + '</b><span class="muted">' + p.d + '</span>' +
+          '<label class="tog"><input type="checkbox" data-p="' + i + '" data-k="show"' + (p.show ? ' checked' : '') + '>Zobrazit na webu</label>' +
+          '<label class="tog"><input type="checkbox" data-p="' + i + '" data-k="pin"' + (p.pin ? ' checked' : '') + '>Připnout do Vitríny</label></div></div>';
+      }).join('') + '</div></div>';
+  };
+  function vValue() { return S.vf.type === 'castka' ? kc(S.vf.amount || 0) : (S.vf.item || 'Položka'); }
+  function fmtDate(iso) { if (!iso) return '—'; var p = iso.split('-'); return Number(p[2]) + '. ' + Number(p[1]) + '. ' + p[0]; }
+  R.poukazy = function () {
+    var f = S.vf;
+    return '<h1>Dárkové poukazy</h1>' +
+      '<div class="panel"><h2>Nový poukaz</h2><div class="voucher-wrap"><form class="voucher-form" id="vform">' +
+      '<label class="f" for="vtype">Typ poukazu<select class="in" id="vtype" data-v="type"><option value="castka"' + (f.type === 'castka' ? ' selected' : '') + '>Částka</option><option value="polozka"' + (f.type === 'polozka' ? ' selected' : '') + '>Položka z menu</option></select></label>' +
+      (f.type === 'castka' ? '<label class="f" for="vamount">Hodnota v Kč<input class="in" id="vamount" inputmode="numeric" data-v="amount" value="' + esc(f.amount) + '"></label>'
+        : '<label class="f" for="vitem">Co poukaz obsahuje<input class="in" id="vitem" data-v="item" value="' + esc(f.item) + '"></label>') +
+      '<label class="f" for="vwho">Pro koho<input class="in" id="vwho" data-v="who" value="' + esc(f.who) + '"></label>' +
+      '<label class="f" for="vmsg">Vzkaz<textarea class="in" id="vmsg" data-v="msg">' + esc(f.msg) + '</textarea></label>' +
+      '<label class="f" for="vuntil">Platnost do<input class="in" type="date" id="vuntil" data-v="until" value="' + f.until + '"></label>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn primary" type="submit">Vystavit poukaz</button></div></form>' +
+      '<div class="voucher-prev"><p class="muted" style="font-size:13px;margin-bottom:8px">Náhled poukazu (PDF k tisku nebo do e-mailu)</p>' +
+      '<div class="voucher"><div class="in-v">' +
+      '<svg viewBox="0 0 100 104" width="34" height="35" aria-hidden="true" style="margin:0 auto"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#FBF8F1" stroke-width="4"></path></g></svg>' +
+      '<span class="t">Dárkový poukaz · Gimmi lounge café</span><span class="v" id="pv-v">' + esc(vValue()) + '</span><span class="w" id="pv-w">' + esc(f.who) + '</span><p class="msg" id="pv-m">' + esc(f.msg) + '</p>' +
+      '<div class="meta"><span>Kód <span class="code">GIM-' + nextCode() + '</span></span><span id="pv-u">Platí do ' + fmtDate(f.until) + '</span></div></div></div></div></div></div>' +
+      '<div class="panel"><h2>Vydané poukazy</h2><div class="table-wrap"><table><thead><tr><th>Kód</th><th>Hodnota</th><th>Pro koho</th><th>Platnost</th><th>Stav</th><th></th></tr></thead><tbody>' +
+      S.vouchers.map(function (v, i) {
+        return '<tr><td class="num"><b>' + v.code + '</b></td><td>' + esc(v.v) + '</td><td>' + esc(v.who) + '</td><td class="num">' + v.until + '</td><td>' +
+          (v.used ? '<span class="chip">Uplatněný</span>' : '<span class="chip ok dot">Platný</span>') + '</td><td>' +
+          (v.used ? '' : '<button class="btn small" type="button" data-use="' + i + '">Označit jako uplatněný</button>') + '</td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+  };
+  var codeSeed = 5207;
+  function nextCode() { return String(codeSeed); }
+  R.rezervace = function () {
+    var label = { nova: '<span class="chip warn dot">Čeká na potvrzení</span>', potvrzena: '<span class="chip ok dot">Potvrzená</span>', odmitnuta: '<span class="chip terra">Odmítnutá</span>' };
+    return '<h1>Rezervace</h1><div class="panel"><p class="muted" style="font-size:14.5px">Žádosti z webu. Po potvrzení dostane host automaticky e-mail.</p><div class="table-wrap"><table><thead><tr><th>Kdy</th><th>Jméno</th><th>Osob</th><th>Poznámka</th><th>Stav</th><th></th></tr></thead><tbody>' +
+      S.res.map(function (r, i) {
+        return '<tr><td class="num">' + r.d + ' · ' + r.t + '</td><td>' + esc(r.n) + '</td><td class="num">' + r.p + '</td><td>' + (esc(r.note) || '<span class="muted">—</span>') + '</td><td>' + label[r.st] + '</td><td>' +
+          (r.st === 'nova' ? '<div class="actions"><button class="btn small primary" type="button" data-res="' + i + '" data-st="potvrzena">Potvrdit</button><button class="btn small" type="button" data-res="' + i + '" data-st="odmitnuta">Odmítnout</button></div>' : '') + '</td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+  };
+
+  function render() {
+    side();
+    $('#main').innerHTML = R[S.view]();
+  }
+  function go(v) {
+    S.view = v; render();
+    try { history.replaceState(null, '', '#' + v); } catch (e) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.view) return go(t.dataset.view);
+    if (t.dataset.go) return go(t.dataset.go);
+    if (t.dataset.cat) { S.cat = t.dataset.cat; return render(); }
+    if (t.dataset.act === 'save') return toast('Uloženo, na webu je to hned vidět');
+    if (t.dataset.act === 'add-item') { S.menu[S.cat].unshift({ n: 'Nová položka', p: 0, on: true }); render(); var f = $('.item .in'); if (f) { f.focus(); f.select(); } return; }
+    if (t.dataset.use) { S.vouchers[+t.dataset.use].used = true; render(); return toast('Poukaz označen jako uplatněný'); }
+    if (t.dataset.res) { S.res[+t.dataset.res].st = t.dataset.st; render(); return toast(t.dataset.st === 'potvrzena' ? 'Potvrzeno, host dostane e-mail' : 'Rezervace odmítnuta'); }
+  });
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.dataset.i !== undefined && (t.dataset.k === 'n' || t.dataset.k === 'p')) { S.menu[S.cat][+t.dataset.i][t.dataset.k] = t.dataset.k === 'p' ? t.value.replace(/\D/g, '') : t.value; return; }
+    if (t.dataset.h !== undefined && (t.dataset.k === 'o' || t.dataset.k === 'c')) { S.hours[+t.dataset.h][t.dataset.k] = t.value; return; }
+    if (t.dataset.act === 'notice-text') { S.notice.text = t.value; var b = $('#bprev'); if (b) b.textContent = t.value; return; }
+    if (t.dataset.v) {
+      S.vf[t.dataset.v] = t.value;
+      var pv = $('#pv-v'); if (pv) pv.textContent = vValue();
+      if (t.dataset.v === 'who') $('#pv-w').textContent = t.value;
+      if (t.dataset.v === 'msg') $('#pv-m').textContent = t.value;
+      if (t.dataset.v === 'until') $('#pv-u').textContent = 'Platí do ' + fmtDate(t.value);
+    }
+  });
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset.i !== undefined && t.dataset.k === 'tip') { S.menu[S.cat][+t.dataset.i].tip = t.checked; return; }
+    if (t.dataset.i !== undefined && t.dataset.k === 'on') { S.menu[S.cat][+t.dataset.i].on = !t.checked; t.closest('.item').classList.toggle('off', t.checked); return; }
+    if (t.dataset.h !== undefined && t.dataset.k === 'open') { S.hours[+t.dataset.h].open = !t.checked; return render(); }
+    if (t.dataset.act === 'notice-on') { S.notice.on = t.checked; return render(); }
+    if (t.dataset.p !== undefined) { S.posts[+t.dataset.p][t.dataset.k] = t.checked; return toast(t.dataset.k === 'pin' ? (t.checked ? 'Připnuto do Vitríny' : 'Odepnuto') : (t.checked ? 'Zobrazeno na webu' : 'Skryto z webu')); }
+    if (t.dataset.v === 'type') { S.vf.type = t.value; return render(); }
+  });
+  document.addEventListener('submit', function (e) {
+    if (e.target.id !== 'vform') return;
+    e.preventDefault();
+    S.vouchers.unshift({ code: 'GIM-' + nextCode(), v: vValue(), who: S.vf.who, until: fmtDate(S.vf.until), used: false });
+    codeSeed += 1137;
+    render();
+    toast('Poukaz vystaven, PDF je připravené k tisku');
+  });
+
+  var h = (location.hash || '').slice(1);
+  if (views.some(function (v) { return v[0] === h; })) S.view = h;
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/* Gimmi – podklady pro návrh. Jeden světlý vzhled podle webu kavárny (krém, zelená, zlaté rámy). */
+:root {
+  --bg: #F5EFE3;
+  --paper: #FBF8F1;
+  --paper-2: #FFFDF8;
+  --line: #E3D9C4;
+  --ink: #2A211B;
+  --ink-2: #4E433A;
+  --muted: #6B5E52;
+  --green: #707A48;
+  --green-ink: #5A5C26;
+  --green-soft: #E6E8D6;
+  --terra: #9A4524;
+  --terra-2: #B5562E;
+  --wood: #3B2B20;
+  --gold: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%);
+  --ok: #4F7A34;
+  --ok-soft: #E3EDD8;
+  --warn: #9A6A12;
+  --warn-soft: #F6EBCF;
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--green-ink); }
+a:hover { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--terra-2); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: -0.015em; text-wrap: balance; margin: 0; line-height: 1.08; }
+p { margin: 0; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 38em; }
+.muted { color: var(--muted); }
+.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.mark b { font-family: var(--display); font-weight: 600; font-size: 24px; line-height: 1; letter-spacing: -0.01em; }
+.mark small { display: block; margin-top: 3px; font-size: 9.5px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: rgba(245, 239, 227, 0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 31; background: var(--bg); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; flex-wrap: wrap; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; font-weight: 500; }
+.crumbs a { color: var(--ink); text-decoration: none; padding: 10px 0; position: relative; }
+.crumbs a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.crumbs a:hover::after, .crumbs a[aria-current="page"]::after { transform: scaleX(1); }
+.crumbs a[aria-current="page"] { color: var(--green-ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: 600 15px/1 var(--body); text-decoration: none; cursor: pointer; transition: transform .15s ease, background-color .2s ease, color .2s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--green); border-color: var(--green); color: #FFFFFF; }
+.btn.primary:hover { background: var(--green-ink); border-color: var(--green-ink); color: #FFFFFF; }
+.btn.small { min-height: 36px; padding: 0 14px; font-size: 13.5px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 1.5; background: var(--green-soft); color: var(--green-ink); white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.terra { background: #F4E1D6; color: var(--terra); }
+.chip.dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.site-foot { border-top: 1px solid var(--line); margin-top: 72px; padding-block: 28px 96px; font-size: 13.5px; color: var(--muted); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }

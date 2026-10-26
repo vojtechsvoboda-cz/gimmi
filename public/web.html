@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Gimmi – návrh webu</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,400&amp;family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&amp;family=Pinyon+Script&amp;family=Sacramento&amp;display=swap">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F5EFE3}
+section{scroll-margin-top:84px}
+a{color:#5A5C26}a:hover{color:#2A211B}
+.g-nav a{color:#2A211B;text-decoration:none}
+.g-nav a:hover{color:#9A4524}
+.g-btn{transition:transform .15s ease,box-shadow .15s ease}
+.g-btn:hover{transform:translateY(-1px);box-shadow:0 12px 22px -14px rgba(42,33,27,.6)}
+.g-tile .g-frame{transition:transform .25s ease}
+.g-tile:hover .g-frame{transform:translateY(-4px) rotate(-.5deg)}
+.g-field:focus{outline:2px solid #B5562E;outline-offset:1px}
+.g-arrow:disabled{opacity:.35;cursor:default}
+.g-navlink{position:relative;display:inline-block;padding:12px 0;transition:color .3s ease}
+.g-navlink::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:2px;border-radius:2px;background:#707A48;transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.g-navlink:hover::after{transform:scaleX(.35)}
+.g-nav a.g-navlink[aria-current="true"]{color:#5A5C26}
+.g-navlink[aria-current="true"]::after{transform:scaleX(1)}
+.g-tab{transition:background-color .2s ease,border-color .2s ease,transform .2s ease}
+.g-tab[aria-pressed="false"]:hover{background:#EFE7D6 !important;border-color:#8C7F6A !important;transform:translateY(-1px)}
+.g-thumb span:first-child{transition:transform .25s ease,box-shadow .25s ease,opacity .25s ease}
+.g-thumb:hover span:first-child{transform:translateY(-3px);opacity:1 !important}
+@keyframes g-sway{0%,100%{transform:rotate(-1.8deg)}50%{transform:rotate(1.8deg)}}
+@keyframes g-flicker{0%,100%{opacity:1}40%{opacity:.78}55%{opacity:.95}70%{opacity:.85}}
+.g-lustr{transform-origin:50% 0;animation:g-sway 6s ease-in-out infinite}
+.g-lustr:hover{animation-duration:2.6s}
+.g-lustr:focus-visible{outline:2px solid #B5562E;outline-offset:6px;border-radius:12px}
+.g-flame{animation:g-flicker 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.g-lustr,.g-flame{animation:none}}
+.g-navwrap{order:3;flex-basis:100%;overflow-x:auto}
+.g-cta{order:2;margin-left:auto}
+@media (min-width:1040px){.g-navwrap{order:2;flex-basis:auto;margin:0 auto;overflow:visible}.g-cta{order:3;margin-left:0}}
+@media (max-width:520px){.g-hide-xs{display:none}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<template id="tpl">
+<div id="top" style="--acc: {{accFamily}}; --accst: {{accStyle}}; --accs: {{accScale}}; font-family: 'DM Sans', system-ui, -apple-system, sans-serif; font-size: 17px; line-height: 1.6; color: #2A211B; background: #F5EFE3; min-width: 0; overflow-x: clip;">
+
+<header style="position: sticky; top: 0; z-index: 40; background: rgba(245, 239, 227, 0.94); backdrop-filter: blur(10px); border-bottom: 1px solid #E3D9C4;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 8px clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; column-gap: 28px; row-gap: 0px;">
+<a href="#top" aria-label="Gimmi lounge café – na začátek stránky" style="order: 1; display: inline-flex; align-items: center; gap: 10px; min-height: 52px; color: #2A211B; text-decoration: none;">
+<svg viewBox="0 0 100 104" width="30" height="31" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#5A5C26"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
+<span style="display: flex; flex-direction: column; line-height: 1;">
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 26px; letter-spacing: -0.01em;">Gimmi</span>
+<span style="margin-top: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #6B5E52;">lounge café</span>
+</span>
+</a>
+<nav aria-label="Hlavní navigace" class="g-navwrap g-nav">
+<div style="display: flex; gap: 22px; white-space: nowrap; font-size: 15px; font-weight: 500;">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="{{n.href}}" onClick="{{n.go}}" class="g-navlink" aria-current="{{n.cur}}">{{n.label}}</a>
+</sc-for>
+</div>
+</nav>
+<div class="g-cta" style="display: flex; align-items: center; gap: 14px;">
+<span class="g-hide-xs" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 500; color: #4E433A;"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{statusDot}};"></span>{{statusShort}}</span>
+<sc-if value="{{showReservation}}" hint-placeholder-val="{{ true }}">
+<a href="#rezervace" class="g-btn" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: #707A48; color: #FFFFFF; font-size: 14.5px; font-weight: 600; text-decoration: none;">Rezervace</a>
+</sc-if>
+</div>
+</div>
+</header>
+
+<main>
+
+<section id="uvod" aria-labelledby="hero-h" style="padding: clamp(28px, 4vw, 64px) 0 clamp(44px, 6vw, 80px);">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: center; gap: clamp(40px, 6vw, 80px);">
+<div style="flex: 1 1 420px; min-width: 0; max-width: 620px;">
+<svg viewBox="0 0 120 40" width="96" height="32" fill="none" stroke="#8C8A48" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 32C40 28 80 20 116 8"></path><path d="M28 28c-3-9 2-17 12-19 1 9-3 16-12 19Z"></path><path d="M30 28c7 5 16 6 22 2-6-7-15-7-22-2Z"></path><path d="M60 22c-2-9 4-15 14-16 0 9-6 15-14 16Z"></path><path d="M62 22c7 5 16 5 22 0-7-6-15-6-22 0Z"></path><path d="M92 14c0-8 6-12 14-11-1 8-7 11-14 11Z"></path></svg>
+<p style="margin: 10px 0 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A4524;">Na Slovanském náměstí od roku 2007</p>
+<h1 id="hero-h" style="margin: 16px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(44px, 6vw, 84px); line-height: 0.98; letter-spacing: -0.025em; color: #2A211B;">{{greeting}} z&nbsp;Gimmi</h1>
+<p style="margin: 26px 0 0; max-width: 34em; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.6; color: #4E433A;">Stylová kavárna s&nbsp;výběrovou kávou v&nbsp;Králově Poli. Snídaně po celý den, dezerty z&nbsp;vlastní výroby a&nbsp;dvě patra plná starých křesel a&nbsp;obrazů.</p>
+<div style="margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px;">
+<a href="#dnes" class="g-btn" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 999px; background: #707A48; color: #FFFFFF; font-size: 16px; font-weight: 600; text-decoration: none;">Co je dnes ve vitríně<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a href="#menu" class="g-btn" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 26px; border-radius: 999px; border: 1px solid #2A211B; color: #2A211B; font-size: 16px; font-weight: 600; text-decoration: none;">Prohlédnout menu</a>
+</div>
+
+</div>
+<div style="flex: 1 1 460px; min-width: 0;">
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); align-items: start;">
+<figure style="margin: 0; grid-column: span 3; grid-row: span 2;">
+<div style="padding: 7px; background: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%); box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.6);">
+<div style="padding: clamp(8px, 1.4vw, 18px); background: #FBF8F1; box-shadow: inset 0 0 0 1px rgba(140, 106, 58, 0.35);">
+<div style="aspect-ratio: 4 / 5; overflow: hidden; background: #E6DCC7;"><img src="img/hero-tartaletky.jpg" alt="Pistáciové tartaletky s jahodami na talíři před starým obrazem v kavárně" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FBF8F1; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3; color: #2A211B;">Tartaletky před obrazem</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Vitrína &amp; galerie</span>
+</figcaption>
+</figure>
+<figure style="margin: clamp(24px, 4vw, 56px) 0 0; grid-column: span 2;">
+<div style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: clamp(6px, 1vw, 12px); background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 1 / 1; overflow: hidden; background: #E6DCC7;"><img src="img/hero-kava.jpg" alt="Cappuccino, dort s ostružinami, croissanty a balíček kávy Oh My Bean" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 12px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 7px 11px 8px; background: #FBF8F1; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 14.5px; line-height: 1.3; color: #2A211B;">Káva od Oh My Bean</span>
+<span style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Mlýnek 2</span>
+</figcaption>
+</figure>
+<figure style="margin: 0; grid-column: span 2;">
+<div style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: clamp(6px, 1vw, 12px); background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 4 / 5; overflow: hidden; background: #E6DCC7;"><img src="img/hero-buchty.jpg" alt="Talíř čerstvých loupáčků, v pozadí křeslo a knihovna" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 12px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 7px 11px 8px; background: #FBF8F1; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 14.5px; line-height: 1.3; color: #2A211B;">Páteční loupáčky</span>
+<span style="font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Ráno na baru</span>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+<section id="dnes" aria-labelledby="dnes-h" style="background: #707A48; color: #FFFFFF; padding: clamp(44px, 5vw, 72px) 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(32px, 4vw, 64px);">
+<figure style="margin: 0; flex: 1 1 300px; max-width: 380px; min-width: 0;">
+<div style="padding: 7px; background: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%); box-shadow: 0 30px 50px -28px rgba(0, 0, 0, 0.7);">
+<div style="padding: clamp(8px, 1.4vw, 18px); background: #FBF8F1; box-shadow: inset 0 0 0 1px rgba(140, 106, 58, 0.35);">
+<div style="aspect-ratio: 4 / 5; overflow: hidden; background: #E6DCC7;"><img src="{{post.img}}" alt="{{post.alt}}" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 16px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FBF8F1; border: 1px solid #E3D9C4; color: #2A211B;">
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Instagram · {{post.date}}</span>
+</figcaption>
+</figure>
+<div style="flex: 1 1 400px; min-width: 0;">
+<p style="margin: 0; font-family: var(--acc); font-style: var(--accst); font-weight: 400; font-size: calc(clamp(34px, 3.6vw, 46px) * var(--accs)); line-height: 1.05; color: #FFE6CF;">{{vitrineKicker}}</p>
+<h2 id="dnes-h" style="margin: 10px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.06; letter-spacing: -0.015em;">{{post.intro}}</h2>
+<ul style="list-style: none; margin: 24px 0 0; padding: 0; min-height: 212px; display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{post.items}}" as="it" hint-placeholder-count="4">
+<li style="display: flex; align-items: flex-start; gap: 14px; font-family: 'Fraunces', Georgia, serif; font-size: clamp(20px, 2vw, 25px); line-height: 1.3;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFE6CF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 0.3em;"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20Z"></path></svg><span>{{it}}</span></li>
+</sc-for>
+</ul>
+<p style="margin: 30px 0 0; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 12px 22px; border: 1px solid rgba(245, 239, 227, 0.32); border-radius: 999px;"><span style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #F6F3E8;">Polévka</span><span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 20px; line-height: 1.3;">{{post.soup}}</span></p>
+<div style="margin-top: 28px;">
+<p style="margin: 0 0 12px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #F6F3E8;">Tento a minulé týdny</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px;">
+<sc-for list="{{pills}}" as="pill" hint-placeholder-count="4">
+<button type="button" class="g-thumb" onClick="{{pill.pick}}" aria-pressed="{{pill.on}}" aria-label="Nabídka {{pill.label}}" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; border: 0; background: transparent; color: #FFFFFF; cursor: pointer; font-family: 'DM Sans', sans-serif;"><span style="display: block; width: 60px; height: 60px; border-radius: 8px; overflow: hidden; box-shadow: 0 0 0 2px {{pill.ring}}; opacity: {{pill.op}};"><img src="{{pill.img}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover;"></span><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap;">{{pill.label}}</span></button>
+</sc-for>
+</div>
+</div>
+<a href="{{post.url}}" target="_blank" rel="noopener" style="margin-top: 22px; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: #F5EFE3; font-weight: 600; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: rgba(245, 239, 227, 0.45);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor"></circle></svg>Celý příspěvek na Instagramu</a>
+</div>
+</div>
+</section>
+
+<section id="kava" aria-labelledby="kava-h" style="padding: clamp(44px, 5vw, 72px) 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="max-width: 720px; margin: 0 auto; text-align: center;">
+<p style="margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A4524;">Mlýnek 1 · Mlýnek 2</p>
+<h2 id="kava-h" style="margin: 12px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 48px); line-height: 1.05; letter-spacing: -0.015em;">Dva mlýnky, dvě kávy</h2>
+<p style="margin: 18px auto 0; max-width: 36em; font-size: 18px; line-height: 1.65; color: #4E433A;">U&nbsp;nás si vybere tu svoji každý. Na jednom mlýnku máme klasiku pro milovníky italského espressa, na druhém výběrovou kávu z&nbsp;českých pražíren.</p>
+</div>
+<div style="margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px;">
+<article style="flex: 1 1 300px; max-width: 400px; min-width: 0; background: #FBF8F1; border: 1px solid #E3D9C4; border-top: 4px solid #B5562E; padding: clamp(24px, 3vw, 34px);">
+<p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #9A4524;">Mlýnek 1</p>
+<h3 style="margin: 10px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 30px; line-height: 1.15;">Bar speciale</h3>
+<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.6; color: #4E433A;">Arabica s&nbsp;robustou v&nbsp;poměru 80/20, italsky tmavě pražená, bez kyselosti.</p>
+<p style="margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px;"><span style="display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border-radius: 999px; background: #EBE3D2; font-size: 13px; font-weight: 500; color: #4E433A;">z&nbsp;8–9&nbsp;g kávy</span><span style="display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border-radius: 999px; background: #EBE3D2; font-size: 13px; font-weight: 500; color: #4E433A;">pro milovníky klasiky</span></p>
+</article>
+<div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px;">
+<svg viewBox="0 0 100 104" width="150" height="156" role="img" aria-label="Kávové zrno ze dvou polovin – mlýnek 1 a mlýnek 2"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#5A5C26"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="2.5"></path></g><text x="33" y="61" text-anchor="middle" dominant-baseline="middle" font-family="Fraunces, Georgia, serif" font-size="15" fill="#FBF8F1">1</text><text x="67" y="44" text-anchor="middle" dominant-baseline="middle" font-family="Fraunces, Georgia, serif" font-size="15" fill="#FBF8F1">2</text></svg>
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #6B5E52;">Espresso 62&nbsp;Kč</span>
+</div>
+<article style="flex: 1 1 300px; max-width: 400px; min-width: 0; background: #FBF8F1; border: 1px solid #E3D9C4; border-top: 4px solid #5A5C26; padding: clamp(24px, 3vw, 34px);">
+<p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #5A5C26;">Mlýnek 2 · doporučujeme</p>
+<h3 style="margin: 10px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 30px; line-height: 1.15;">Výběrová káva</h3>
+<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.6; color: #4E433A;">100% arabica z&nbsp;výběrových exkluzivních káv, čerstvě z&nbsp;českých pražíren. Obměňujeme ji podle nabídky.</p>
+<p style="margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px;"><span style="display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border-radius: 999px; background: #EBE3D2; font-size: 13px; font-weight: 500; color: #4E433A;">z&nbsp;9–10&nbsp;g kávy</span><span style="display: inline-flex; align-items: center; min-height: 30px; padding: 4px 12px; border-radius: 999px; background: #5A5C26; font-size: 13px; font-weight: 600; color: #FBF8F1;">teď na mlýnku: Peru · Oh My Bean</span></p>
+</article>
+</div>
+<p style="margin: 44px auto 0; max-width: 900px; text-align: center; font-size: 15px; line-height: 1.7; color: #6B5E52;">Z&nbsp;obou mlýnků připravíme espresso, cappuccino, flat white i&nbsp;batch brew · alternativní mléko +20&nbsp;Kč · i&nbsp;bez kofeinu ·<a href="#menu" style="color: #5A5C26; font-weight: 600;">celý nápojový lístek</a></p>
+</div>
+</section>
+
+<section id="menu" aria-labelledby="menu-h" style="background: #FBF8F1; border-top: 1px solid #E3D9C4; border-bottom: 1px solid #E3D9C4; padding: clamp(44px, 5vw, 72px) 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 48px;">
+<div style="min-width: 0;">
+<p style="margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A4524;">Jídelní lístek</p>
+<h2 id="menu-h" style="margin: 8px 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 18px; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(38px, 4.2vw, 56px); line-height: 1; letter-spacing: -0.015em;">Menu<span style="font-family: var(--acc); font-style: var(--accst); font-weight: 400; font-size: calc(0.62em * var(--accs)); letter-spacing: 0; color: #B5562E;">snídaně po celý den</span></h2>
+</div>
+<p style="margin: 0; max-width: 28em; font-size: 15.5px; line-height: 1.6; color: #6B5E52;">Štítkem <span style="display: inline-block; padding: 1px 8px 2px; border-radius: 999px; background: #9A4524; color: #FBF8F1; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; vertical-align: 2px;">Gimmi tip</span> označujeme to, co vám doporučujeme nejvíc.</p>
+</div>
+<div style="margin-top: 34px; padding-bottom: 20px; border-bottom: 1px solid #E3D9C4; display: flex; flex-wrap: wrap; gap: 10px;">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<button type="button" class="g-tab" onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">{{t.label}}</button>
+</sc-for>
+</div>
+<p style="margin: 22px 0 0; max-width: 52em; font-size: 15.5px; line-height: 1.6; color: #6B5E52;">{{active.intro}}</p>
+<div style="margin-top: 40px; padding-bottom: 12px; columns: 2 340px; column-gap: 64px;">
+<sc-for list="{{active.groups}}" as="grp" hint-placeholder-count="3">
+<div style="break-inside: avoid; padding-bottom: 44px;">
+<h3 style="margin: 0 0 18px; display: flex; align-items: center; gap: 14px; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 24px; line-height: 1.2;">{{grp.title}}<span aria-hidden="true" style="flex: 1 1 auto; height: 1px; background: #E3D9C4;"></span></h3>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{grp.items}}" as="it" hint-placeholder-count="4">
+<li>
+<div style="display: flex; align-items: flex-end; gap: 10px;">
+<span style="flex: 0 1 auto; min-width: 0; font-family: 'Fraunces', Georgia, serif; font-size: 19px; line-height: 1.3; color: #2A211B;">{{it.name}}<sc-if value="{{it.tip}}" hint-placeholder-val="{{ false }}"><span style="display: inline-block; margin-left: 10px; padding: 1px 8px 2px; border-radius: 999px; background: #9A4524; color: #FBF8F1; font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 700; line-height: 1.6; letter-spacing: 0.08em; text-transform: uppercase; vertical-align: 3px; white-space: nowrap;">Gimmi tip</span></sc-if></span>
+<span aria-hidden="true" style="flex: 1 1 24px; min-width: 24px; height: 0; margin-bottom: 7px; border-bottom: 1.5px dotted #C3B79D;"></span>
+<span style="flex: none; white-space: nowrap; font-weight: 600; font-size: 16px; line-height: 1.55; color: #5A5C26; font-variant-numeric: tabular-nums;">{{it.price}}</span>
+</div>
+<sc-if value="{{it.hasDesc}}" hint-placeholder-val="{{ true }}">
+<p style="margin: 4px 0 0; max-width: 46ch; font-size: 14.5px; line-height: 1.5; color: #6B5E52;">{{it.desc}}</p>
+</sc-if>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{grp.hasNote}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 16px 0 0; font-size: 14px; line-height: 1.5; font-style: italic; color: #9A4524;">{{grp.note}}</p>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; padding-top: 22px; border-top: 1px solid #E3D9C4; font-size: 14px; line-height: 1.6; color: #6B5E52;">Alergeny k&nbsp;nahlédnutí u&nbsp;obsluhy · Nabídka v&nbsp;odpoledních hodinách může být zúžená.</p>
+</div>
+</section>
+
+<section id="dezerty" aria-labelledby="dezerty-h" style="padding: clamp(44px, 5vw, 72px) 0 clamp(40px, 5vw, 72px);">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 48px;">
+<div style="flex: 1 1 420px; min-width: 0;">
+<p style="margin: 0; font-family: var(--acc); font-style: var(--accst); font-weight: 400; font-size: calc(clamp(34px, 3.6vw, 46px) * var(--accs)); line-height: 1.05; color: #B5562E;">z&nbsp;naší vitríny</p>
+<h2 id="dezerty-h" style="margin: 8px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 48px); line-height: 1.05; letter-spacing: -0.015em;">Dezerty, které pečeme sami</h2>
+<p style="margin: 18px 0 0; max-width: 36em; font-size: 18px; line-height: 1.65; color: #4E433A;">Dorty, šneci, větrníčky, buchtičky – každý den trochu jiné. Tady je ochutnávka z&nbsp;posledních týdnů.</p>
+</div>
+<div style="display: flex; gap: 10px;">
+<button type="button" class="g-arrow" onClick="{{dezPrev}}" disabled="{{dezAtStart}}" aria-label="Předchozí dezerty" style="width: 52px; height: 52px; border-radius: 50%; border: 1px solid #2A211B; background: transparent; color: #2A211B; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+<button type="button" class="g-arrow" onClick="{{dezNext}}" disabled="{{dezAtEnd}}" aria-label="Další dezerty" style="width: 52px; height: 52px; border-radius: 50%; border: 1px solid #2A211B; background: #2A211B; color: #FBF8F1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+<div style="margin-top: 44px; overflow: hidden; padding: 6px 0 36px;">
+<div style="display: flex; gap: 24px; transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); transform: translateX({{dezShift}});">
+<sc-for list="{{dez}}" as="d" hint-placeholder-count="4">
+<a href="{{d.url}}" target="_blank" rel="noopener" class="g-tile" style="flex: 0 0 min(260px, 68vw); display: block; color: #2A211B; text-decoration: none;">
+<figure style="margin: 0;">
+<div class="g-frame" style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: 12px; background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 4 / 5; overflow: hidden; background: #E6DCC7;"><img src="{{d.img}}" alt="{{d.title}}" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FBF8F1; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3;">{{d.title}}</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">{{d.date}}</span>
+</figcaption>
+</figure>
+</a>
+</sc-for>
+</div>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #6B5E52;">Alergeny a&nbsp;složení vám ráda řekne obsluha.</p>
+</div>
+</section>
+
+<section id="kavarna" aria-labelledby="kavarna-h" style="background: #FBF8F1; border-top: 1px solid #E3D9C4; padding: 0 0 clamp(44px, 5vw, 72px);">
+<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: clamp(16px, 3vw, 32px);">
+<button type="button" onClick="{{toggleLustr}}" aria-pressed="{{lustrLit}}" aria-label="{{lustrLabel}}" class="g-lustr" style="padding: 0; border: 0; background: transparent; cursor: pointer; display: block;">
+<svg viewBox="0 -40 220 240" width="210" height="229" aria-hidden="true" style="display: block; overflow: visible;">
+<defs><radialGradient id="g-glow"><stop offset="0" stop-color="#FFD98A" stop-opacity="0.8"></stop><stop offset="0.55" stop-color="#FFD98A" stop-opacity="0.22"></stop><stop offset="1" stop-color="#FFD98A" stop-opacity="0"></stop></radialGradient></defs>
+<circle cx="110" cy="100" r="118" fill="url(#g-glow)" opacity="{{lustrGlow}}" style="transition: opacity 0.6s ease;"></circle>
+<path d="M110 -40v68" stroke="#8C6A3A" stroke-width="2.5" stroke-dasharray="5 3"></path>
+<ellipse cx="110" cy="30" rx="15" ry="5" fill="#C9A35A"></ellipse>
+<path d="M110 30v90" stroke="#B08A45" stroke-width="5" stroke-linecap="round"></path>
+<circle cx="110" cy="72" r="9" fill="#C9A35A"></circle>
+<circle cx="110" cy="98" r="6" fill="#E9D9B0" stroke="#C9A35A" stroke-width="1"></circle>
+<ellipse cx="110" cy="120" rx="22" ry="9" fill="#C9A35A"></ellipse>
+<path d="M110 128l-7 14 7 12 7-12z" fill="#F6EDD6" stroke="#C9A35A" stroke-width="1"></path>
+<g fill="none" stroke="#B08A45" stroke-width="3" stroke-linecap="round">
+<path d="M110 118C80 140 40 132 32 112"></path>
+<path d="M110 118C90 132 66 128 62 110"></path>
+<path d="M110 118C130 132 154 128 158 110"></path>
+<path d="M110 118C140 140 180 132 188 112"></path>
+<path d="M110 76C90 92 64 88 60 70"></path>
+<path d="M110 76C130 92 156 88 160 70"></path>
+</g>
+<path d="M32 113Q110 168 188 113" fill="none" stroke="#E9D9B0" stroke-width="2.4" stroke-dasharray="0.1 5" stroke-linecap="round"></path>
+<path d="M60 71Q110 112 160 71" fill="none" stroke="#E9D9B0" stroke-width="2.4" stroke-dasharray="0.1 5" stroke-linecap="round"></path>
+<g fill="#F6EDD6" stroke="#C9A35A" stroke-width="0.9">
+<path d="M46 133l-4 7 4 8 4-8z"></path><path d="M78 131l-4 7 4 8 4-8z"></path><path d="M142 131l-4 7 4 8 4-8z"></path><path d="M174 133l-4 7 4 8 4-8z"></path><path d="M84 92l-3 6 3 7 3-7z"></path><path d="M136 92l-3 6 3 7 3-7z"></path><path d="M110 156l-3 6 3 8 3-8z"></path>
+</g>
+<g fill="#C9A35A"><ellipse cx="32" cy="112" rx="8" ry="3"></ellipse><ellipse cx="62" cy="110" rx="8" ry="3"></ellipse><ellipse cx="158" cy="110" rx="8" ry="3"></ellipse><ellipse cx="188" cy="112" rx="8" ry="3"></ellipse><ellipse cx="60" cy="70" rx="8" ry="3"></ellipse><ellipse cx="160" cy="70" rx="8" ry="3"></ellipse></g>
+<g fill="#FBF5E6" stroke="#E3D3B0" stroke-width="1"><rect x="29" y="94" width="6" height="18" rx="1.5"></rect><rect x="59" y="92" width="6" height="18" rx="1.5"></rect><rect x="155" y="92" width="6" height="18" rx="1.5"></rect><rect x="185" y="94" width="6" height="18" rx="1.5"></rect><rect x="57" y="52" width="6" height="18" rx="1.5"></rect><rect x="157" y="52" width="6" height="18" rx="1.5"></rect></g>
+<g opacity="{{lustrFlame}}" style="transition: opacity 0.4s ease;">
+<g fill="#FFE3A3" opacity="0.55"><circle cx="32" cy="88" r="9"></circle><circle cx="62" cy="86" r="9"></circle><circle cx="158" cy="86" r="9"></circle><circle cx="188" cy="88" r="9"></circle><circle cx="60" cy="46" r="9"></circle><circle cx="160" cy="46" r="9"></circle></g>
+<g class="g-flame" fill="#FFC255"><ellipse cx="32" cy="88" rx="3" ry="5.5"></ellipse><ellipse cx="62" cy="86" rx="3" ry="5.5"></ellipse><ellipse cx="158" cy="86" rx="3" ry="5.5"></ellipse><ellipse cx="188" cy="88" rx="3" ry="5.5"></ellipse><ellipse cx="60" cy="46" rx="3" ry="5.5"></ellipse><ellipse cx="160" cy="46" rx="3" ry="5.5"></ellipse></g>
+</g>
+</svg>
+</button>
+<span style="margin-top: 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">{{lustrHint}}</span>
+</div>
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(40px, 6vw, 88px);">
+<div style="flex: 1 1 440px; min-width: 0;">
+<p style="margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A4524;">O&nbsp;kavárně</p>
+<h2 id="kavarna-h" style="margin: 12px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.06; letter-spacing: -0.015em;">Dvě patra, stará křesla a&nbsp;obrazy na stěnách</h2>
+<p style="margin: 22px 0 0; max-width: 34em; font-size: 18px; line-height: 1.65; color: #4E433A;">Gimmi je stylová brněnská kavárna na Slovanském náměstí, jsme tu pro vás od roku 2007. Chodí se k&nbsp;nám na snídani, na pracovní schůzku i&nbsp;jen tak na kafíčko s&nbsp;novinami. Dezerty a&nbsp;koláče děláme sami – a&nbsp;všechno, co se týká kávy, milujeme.</p>
+<ul style="list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px;">
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5c2.2-1.8 5.6-1.6 7.6.4 1.3 1.3 3.9 1.7 4.4 4.6.6 3.6-2.6 7.6-8 8-4.8.4-8.6-1.6-8.5-5.3.1-3.2 2.4-5.7 4.5-7.7Z"></path><circle cx="11.5" cy="12" r="2.8"></circle></svg></span>Snídaně po celý den</li>
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 12h11l-1.6 8h-7.8l-1.6-8Z"></path><path d="M5.5 12a6.5 4.5 0 0 1 13 0"></path><path d="M10 15.5l.4 4.5M14 15.5l-.4 4.5"></path><path d="M12 5.5v2"></path></svg></span>Vlastní dezerty a&nbsp;koláče</li>
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 8h9l-1.2 12H8.7L7.5 8Z"></path><path d="M6.5 8h11V5.8a.8.8 0 0 0-.8-.8H7.3a.8.8 0 0 0-.8.8V8Z"></path><path d="M8.2 12.5h7.6"></path></svg></span>Káva s&nbsp;sebou</li>
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="14" height="14" rx="1.5"></rect><path d="M17.5 9h3v8.5a1.5 1.5 0 0 1-3 0"></path><path d="M6.5 9h8M6.5 12h8M6.5 15h5"></path></svg></span>Denní tisk</li>
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-6"></path><path d="M12 15c-4.2 0-7-3-7-7.2 4.2 0 7 3 7 7.2Z"></path><path d="M12 15c0-5.2 3.1-9 7-9 0 5.2-3.1 9-7 9Z"></path></svg></span>Nekuřácká zahrádka</li>
+<li style="display: flex; align-items: center; gap: 12px; font-size: 15.5px; font-weight: 500; line-height: 1.35;"><span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #EBE3D2; color: #5A5C26; display: inline-flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5a12 12 0 0 1 16 0"></path><path d="M7 13a7.5 7.5 0 0 1 10 0"></path><path d="M10 16.5a3 3 0 0 1 4 0"></path><circle cx="12" cy="19.2" r="0.5" fill="currentColor"></circle></svg></span>Wi-Fi zdarma</li>
+</ul>
+<blockquote style="margin: 40px 0 0; padding: 26px 0 0; border-top: 1px solid #E3D9C4;">
+<p style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(21px, 2.2vw, 27px); line-height: 1.4; color: #5A5C26;">„Pokud se vám něco líbilo, řekněte to všem. Pokud se vám něco nelíbilo, řekněte to nám.“</p>
+</blockquote>
+</div>
+<div style="flex: 1 1 420px; min-width: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 22px; align-items: start;">
+<figure style="margin: 0; grid-column: 1 / span 4;">
+<div style="padding: 7px; background: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%); box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.6);">
+<div style="padding: clamp(8px, 1.2vw, 14px); background: #FBF8F1; box-shadow: inset 0 0 0 1px rgba(140, 106, 58, 0.35);">
+<div style="aspect-ratio: 4 / 5; overflow: hidden; background: #E6DCC7;"><img src="img/in-obrazy.jpg" alt="Pohled z patra na stěnu s obrazy, Monu Lisu a křišťálový lustr" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FFFDF8; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3; color: #2A211B;">Galerie nad schody</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Pohled z&nbsp;patra</span>
+</figcaption>
+</figure>
+<figure style="margin: 0; grid-column: 3 / span 4;">
+<div style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: clamp(8px, 1.2vw, 14px); background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 1 / 1; overflow: hidden; background: #E6DCC7;"><img src="img/in-kava.jpg" alt="Káva v porcelánovém šálku s kytičkami na dřevěném podnosu se sklenicí vody" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FFFDF8; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3; color: #2A211B;">Káva na podnose, jako u&nbsp;babičky</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Porcelán s&nbsp;kytičkami</span>
+</figcaption>
+</figure>
+</div>
+</div>
+<div style="max-width: 1200px; margin: clamp(48px, 6vw, 80px) auto 0; padding: 0 clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; align-items: flex-end; gap: 28px;">
+<figure style="margin: 0; flex: 999 1 520px; min-width: 0;">
+<div style="padding: 8px; background: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%); box-shadow: 0 30px 50px -28px rgba(42, 33, 27, 0.6);">
+<div style="aspect-ratio: 16 / 7; overflow: hidden; background: #E6DCC7;"><img src="img/in-mural.jpg" alt="Velká nástěnná malba ve stylu starých mistrů podél schodiště do patra" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FFFDF8; border: 1px solid #E3D9C4;">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3; color: #2A211B;">Malba přes celou stěnu u&nbsp;schodů do patra</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Interiér</span>
+</figcaption>
+</figure>
+<figure style="margin: 0; flex: 1 1 220px; min-width: 0; max-width: 340px;">
+<div style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: 10px; background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 3 / 4; overflow: hidden; background: #E6DCC7;"><img src="img/in-radio.jpg" alt="Retro rádio v dřevěné skříni pod lampou se stínítkem, u zelené zdi" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FFFDF8; border: 1px solid #E3D9C4;">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3; color: #2A211B;">Retro rádio pod lampou</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">Zákoutí v&nbsp;patře</span>
+</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="galerie" aria-labelledby="galerie-h" style="background: #EBE3D2; padding: clamp(44px, 5vw, 72px) 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="max-width: 720px; margin: 0 auto; text-align: center;">
+<p style="margin: 0; font-family: var(--acc); font-style: var(--accst); font-weight: 400; font-size: calc(clamp(34px, 3.6vw, 46px) * var(--accs)); line-height: 1.05; color: #B5562E;">z&nbsp;Instagramu</p>
+<h2 id="galerie-h" style="margin: 8px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 48px); line-height: 1.05; letter-spacing: -0.015em;">Galerie, která se pořád mění</h2>
+<p style="margin: 18px auto 0; max-width: 34em; font-size: 18px; line-height: 1.65; color: #4E433A;">Dobroty z&nbsp;vitríny, polévky, sezónní novinky i&nbsp;chvíle, na které vzpomínáme. Všechno nové najdete na našem Instagramu.</p>
+</div>
+<div style="margin: 40px auto 0; max-width: 980px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 32px 28px;">
+<sc-for list="{{gallery}}" as="g" hint-placeholder-count="6">
+<a href="{{g.url}}" target="_blank" rel="noopener" class="g-tile" style="min-width: 0; display: block; color: #2A211B; text-decoration: none;">
+<figure style="margin: 0;">
+<div class="g-frame" style="padding: 6px; background: #3B2B20; box-shadow: 0 24px 40px -24px rgba(42, 33, 27, 0.55);">
+<div style="padding: clamp(8px, 1.2vw, 14px); background: #FBF8F1; box-shadow: inset 0 0 0 1px #B39257;">
+<div style="aspect-ratio: 1 / 1; overflow: hidden; background: #E6DCC7;"><img src="{{g.img}}" alt="{{g.title}}" style="display: block; width: 100%; height: 100%; object-fit: cover;"></div>
+</div>
+</div>
+<figcaption style="margin-top: 14px; display: inline-flex; flex-direction: column; gap: 3px; max-width: 100%; padding: 8px 12px 9px; background: #FBF8F1; border: 1px solid #E3D9C4; box-shadow: 0 1px 2px rgba(42, 33, 27, 0.06);">
+<span style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.3;">{{g.title}}</span>
+<span style="font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B5E52;">{{g.date}}</span>
+</figcaption>
+</figure>
+</a>
+</sc-for>
+</div>
+<div style="margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+<a href="https://www.instagram.com/gimmicafe/" target="_blank" rel="noopener" class="g-btn" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px; background: #2A211B; color: #FBF8F1; font-size: 16px; font-weight: 600; text-decoration: none;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor"></circle></svg>Sledovat @gimmicafe</a>
+<a href="https://www.facebook.com/gimmicafe" target="_blank" rel="noopener" class="g-btn" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px; border: 1px solid #2A211B; color: #2A211B; font-size: 16px; font-weight: 600; text-decoration: none;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 21v-7.5h2.7l.4-3.1h-3.1V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4a20 20 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4v2.1H8.6v3.1h2.7V21"></path></svg>Facebook</a>
+</div>
+</div>
+</section>
+
+<section id="kontakt" aria-labelledby="kontakt-h" style="background: #707A48; color: #FFFFFF; padding: clamp(44px, 5vw, 72px) 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(40px, 6vw, 80px);">
+<div style="flex: 1 1 420px; min-width: 0;">
+<p style="margin: 0; font-family: var(--acc); font-style: var(--accst); font-weight: 400; font-size: calc(clamp(34px, 3.6vw, 46px) * var(--accs)); line-height: 1.05; color: #FFE6CF;">těšíme se na vás</p>
+<h2 id="kontakt-h" style="margin: 8px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(32px, 3.8vw, 48px); line-height: 1.05; letter-spacing: -0.015em;">Přijďte k&nbsp;nám</h2>
+<div style="margin-top: 30px; display: flex; align-items: flex-start; gap: 14px;">
+<span style="flex: none; margin-top: 4px; color: #FFE6CF;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg></span>
+<div style="min-width: 0;">
+<p style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px; line-height: 1.3;">Slovanské náměstí 2237/1</p>
+<p style="margin: 2px 0 0; font-size: 16px; color: #F6F3E8;">612 00 Brno – Královo Pole</p>
+</div>
+</div>
+<div style="margin-top: 30px; border: 1px solid rgba(245, 239, 227, 0.22); border-radius: 4px; overflow: hidden;">
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; font-weight: 600;"><span aria-hidden="true" style="flex: none; width: 10px; height: 10px; border-radius: 50%; background: {{statusDot}}; box-shadow: 0 0 0 5px {{statusHalo}};"></span>{{statusText}}</div>
+<sc-for list="{{hours}}" as="h" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 20px; border-top: 1px solid rgba(245, 239, 227, 0.14); background: {{h.bg}}; font-weight: {{h.weight}};">
+<span style="display: inline-flex; align-items: center; gap: 10px;">{{h.label}}<sc-if value="{{h.today}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; border-radius: 999px; background: #FFE6CF; color: #2A211B; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">dnes</span></sc-if></span>
+<span style="white-space: nowrap; font-variant-numeric: tabular-nums;">{{h.time}}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top: 26px; display: flex; flex-direction: column; gap: 4px;">
+<a href="tel:+420774575066" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #F5EFE3; text-decoration: none; font-size: 17px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FFE6CF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 4h3l1.6 4.2-2.1 1.3a11 11 0 0 0 6.5 6.5l1.3-2.1L20 15.5v3A1.6 1.6 0 0 1 18.3 20 15.5 15.5 0 0 1 4 5.7 1.6 1.6 0 0 1 5.5 4Z"></path></svg>+420&nbsp;774&nbsp;575&nbsp;066</a>
+<a href="tel:+420777839012" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #F5EFE3; text-decoration: none; font-size: 17px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FFE6CF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 4h3l1.6 4.2-2.1 1.3a11 11 0 0 0 6.5 6.5l1.3-2.1L20 15.5v3A1.6 1.6 0 0 1 18.3 20 15.5 15.5 0 0 1 4 5.7 1.6 1.6 0 0 1 5.5 4Z"></path></svg>+420&nbsp;777&nbsp;839&nbsp;012</a>
+<a href="mailto:info@gimmicafe.cz" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #F5EFE3; text-decoration: none; font-size: 17px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FFE6CF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"></rect><path d="m4.5 7 7.5 6 7.5-6"></path></svg>info@gimmicafe.cz</a>
+</div>
+</div>
+<sc-if value="{{showReservation}}" hint-placeholder-val="{{ true }}">
+<div id="rezervace" style="flex: 1 1 380px; min-width: 0; max-width: 560px; background: #F5EFE3; color: #2A211B; border-radius: 6px; padding: clamp(22px, 3.4vw, 40px); box-shadow: 0 30px 60px -32px rgba(0, 0, 0, 0.55);">
+<sc-if value="{{formOpen}}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{submit}}" style="display: flex; flex-direction: column; gap: 18px;">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #9A4524;">Rezervace stolu</p>
+<h3 style="margin: 8px 0 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(28px, 3vw, 34px); line-height: 1.1;">Podržíme vám stůl</h3>
+<p style="margin: 10px 0 0; font-size: 15.5px; line-height: 1.6; color: #4E433A;">Chystáte pracovní schůzku nebo snídani ve více lidech? Pošlete nám žádost a&nbsp;rezervaci vám potvrdíme.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px;">
+<label style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600;">Jméno<input class="g-field" type="text" name="jmeno" required="required" style="width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400;"></label>
+<label style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600;">Telefon nebo e-mail<input class="g-field" type="text" name="kontakt" required="required" style="width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400;"></label>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px;">
+<label style="flex: 1 1 150px; min-width: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600;">Datum<input class="g-field" type="date" name="datum" required="required" style="width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400;"></label>
+<label style="flex: 1 1 110px; min-width: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600;">Čas<input class="g-field" type="time" name="cas" required="required" style="width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400;"></label>
+<fieldset style="flex: 1 1 170px; min-width: 0; margin: 0; padding: 0; border: 0;">
+<legend style="padding: 0; margin: 0 0 6px; font-size: 13px; font-weight: 600;">Počet osob</legend>
+<div style="display: flex; align-items: center; min-height: 48px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8;">
+<button type="button" onClick="{{dec}}" aria-label="Ubrat osobu" style="flex: none; width: 44px; height: 46px; border: 0; background: transparent; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 22px; line-height: 1; cursor: pointer;">−</button>
+<span aria-live="polite" style="flex: 1 1 auto; text-align: center; font-size: 15px; font-weight: 600;">{{guests}} {{guestsLabel}}</span>
+<button type="button" onClick="{{inc}}" aria-label="Přidat osobu" style="flex: none; width: 44px; height: 46px; border: 0; background: transparent; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 22px; line-height: 1; cursor: pointer;">+</button>
+</div>
+</fieldset>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600;">Poznámka (nepovinné)<textarea class="g-field" name="poznamka" rows="3" style="width: 100%; padding: 10px 14px; border: 1px solid #CFC5AE; border-radius: 10px; background: #FFFDF8; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400; resize: vertical;"></textarea></label>
+<button type="submit" class="g-btn" style="min-height: 52px; border: 0; border-radius: 999px; background: #9A4524; color: #FBF8F1; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer;">Odeslat žádost o&nbsp;rezervaci</button>
+</form>
+</sc-if>
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 8px 0;">
+<svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#B5562E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20Z"></path></svg>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(28px, 3vw, 34px); line-height: 1.1;">Děkujeme, žádost máme</h3>
+<p style="margin: 0; font-size: 15.5px; line-height: 1.6; color: #4E433A;">Ozveme se vám s&nbsp;potvrzením rezervace. Kdyby něco spěchalo, zavolejte nám na +420&nbsp;774&nbsp;575&nbsp;066.</p>
+<button type="button" onClick="{{reset}}" class="g-btn" style="min-height: 46px; padding: 0 20px; border-radius: 999px; border: 1px solid #2A211B; background: transparent; color: #2A211B; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;">Poslat další žádost</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+
+<div style="margin-top: clamp(40px, 5vw, 64px); display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px;">
+<div style="flex: 1 1 380px; max-width: 620px; min-width: 0; padding: 7px; background: linear-gradient(135deg, #D2B477 0%, #8C6A3A 38%, #E0C891 55%, #8C6A3A 80%, #C7A465 100%); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);">
+<div style="padding: clamp(8px, 1.4vw, 16px); background: #FBF8F1;">
+<svg viewBox="-320 -200 640 400" role="img" aria-label="Mapa okolí: Gimmi lounge café na východní straně Slovanského náměstí, kousek od Husitské a tramvaje na Palackého třídě" style="display: block; width: 100%; height: auto; background: #EDE5D3;">
+<path d="M-176 -24l-4 4l-4 2l-2 4l-2 4l0 4l-2 4l2 2l0 4l0 2l10 26l2 2l8 8l6 4l8 0l4 0l132 -56l8 -6l8 -10l0 -14l-14 -32l-8 -6l-8 -4l-10 0l-134 58zM308 -220l-12 4l-6 2l4 10l16 36l18 44l6 14l2 8l4 6l2 0l-4 -16l-18 -68l-2 -4l-2 -6l-4 -16l-4 -14zM268 -272l2 14l16 34l6 -2l10 -4l-10 -24l-8 -24l-4 2l-12 4zM-94 150l22 2l2 0l2 -2l0 -2l2 -14l0 -2l-2 -2l-2 0l-2 0l-24 10l-2 2l-2 2l0 2l0 2l2 2l4 0zM-152 14l-2 -8l-4 -8l-18 6l8 18l16 -8zM104 -202l2 0l4 14l-2 2l-4 -16zM98 -216l-8 -18l2 -2l2 2l6 14l0 2l0 2l-2 0z" fill="#D3D1A4"></path>
+<path d="M-62 -50l26 -12l14 32l-28 12l-12 -32zM-108 -30l44 -20l10 32l-40 18l-14 -30z" fill="#BDBB82"></path>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path d="M256 160l2 0l8 -6M354 -66l2 6l2 6M-112 148l6 6l34 2M-84 -66l-6 -12l-26 -32l-26 -32l-14 -18l-78 -96M354 -66l-6 2M354 -66l12 0M284 -298l6 14l4 8l6 18l12 32l0 2l4 8M106 286l-2 -8l-16 -56l-2 -4l-2 -6l-10 -28l-2 -8l-18 -54l0 -6l-2 -4l-20 -62l-20 -62l-2 -6l-2 -8l-2 -6l-4 -4M-70 268l10 -4l140 -46l6 0M280 224l-12 4l-162 58M-176 40l2 6l4 12l4 8l32 80l2 6M-346 -210l2 8l54 126l2 6M-208 -28l2 4l4 10l4 8l2 2l2 2l2 2M254 -294l2 8l6 12l0 4l22 54l6 14l4 12l12 24l2 10l16 32l2 6l2 2l2 2l0 2l4 6l4 10l2 2l2 2l2 0l4 0M-234 -256l-8 2l-104 44l-126 54l-2 0l-8 6M-64 154l2 -2l8 -2l108 -34M-112 148l8 -4l6 -6l32 -12l4 0M-112 148l-10 4l-10 0l-170 72l-10 4M-14 -76l-2 -10l-2 -8l-4 -8l-32 -86l-6 -12l-12 -34l-26 -68l-4 -10l-2 -6l-10 -26l-34 -102l-4 -6M80 174l94 -30l-4 -18M312 -226l-18 6l-2 2l-8 2M-312 228l-8 4l-56 24M348 -64l-56 10l-70 16l-26 8l-12 2l-2 0M350 -80l4 14M358 -54l12 28l22 58l6 16M256 160l-2 2l-10 4l-150 48l-8 4M266 154l130 -34l6 -2M-70 268l6 -108l0 -6M-64 154l2 -28l6 -74l2 -16l0 -12l0 -4l0 -4l-2 -8M316 -216l8 22l2 8l2 4l2 8l16 74M-170 58l12 -6l4 -2M54 116l6 -2l146 -48l10 -2l2 0M72 176l2 0M74 176l4 -2l2 0M-370 98l6 14l24 56l28 60M-236 -92l28 64M-72 156l8 -2M-422 -14l10 -4l124 -52l52 -22l4 -6l68 -56l8 -6M348 -92l2 12M346 -100l2 8" stroke="#D6C8AA" stroke-width="10"></path>
+<path d="M142 -130l8 18M142 -130l-12 4l-24 10l-102 44l-2 0l-4 2l-8 2M110 -94l28 -12l10 -6l2 0M150 -112l4 12l6 14M0 -46l-4 -12l-6 -10M182 -28l0 2l8 16l6 16M218 64l2 8l36 88M-182 30l2 2l2 4l2 4l4 2l4 4l4 2l4 0l4 2l2 0l2 0l2 -2l4 0l50 -22l22 -10l18 -8M122 -184l16 42M160 -86l8 20M138 -142l4 12M168 -66l6 14l2 8l2 4l4 12M-84 -66l-38 16l-18 8l-38 16l-4 2l-2 2l-2 2l-2 2l-2 4l0 4l-2 2l0 4l0 4l0 4l0 4l2 2M-10 -68l-4 -8l-4 -4l-2 -2l-2 -2l-2 0l-2 0l-2 -2l-2 0l-4 0l-4 0l-4 2l-4 2l-26 12l-12 4M-56 8l12 -4l34 -14l2 -2l2 -2l4 -4l2 -4l0 -2l2 -4l0 -2l0 -6l0 -2l0 -4l0 -2l-2 -2M280 224l6 12l2 6l18 46M256 160l2 6l6 14l12 34l4 10M196 6l8 20l14 38M114 -208l8 24M100 -240l10 24l4 8M78 -300l22 60M0 -46l4 -2l4 -2l92 -40l10 -4M-190 10l-2 4l-2 4l0 2l-2 2l-4 4M-200 26l6 0l2 0l2 0l2 2l2 0l4 2M-190 10l8 20M-200 26l-22 10l-16 6l-12 6l-14 6l-10 4l-14 6l-16 6l-14 6l-8 4l-16 8l-28 10l-10 6l-24 10" stroke="#CDBC98" stroke-width="15"></path>
+<path d="M256 160l2 0l8 -6M354 -66l2 6l2 6M-112 148l6 6l34 2M-84 -66l-6 -12l-26 -32l-26 -32l-14 -18l-78 -96M354 -66l-6 2M354 -66l12 0M284 -298l6 14l4 8l6 18l12 32l0 2l4 8M106 286l-2 -8l-16 -56l-2 -4l-2 -6l-10 -28l-2 -8l-18 -54l0 -6l-2 -4l-20 -62l-20 -62l-2 -6l-2 -8l-2 -6l-4 -4M-70 268l10 -4l140 -46l6 0M280 224l-12 4l-162 58M-176 40l2 6l4 12l4 8l32 80l2 6M-346 -210l2 8l54 126l2 6M-208 -28l2 4l4 10l4 8l2 2l2 2l2 2M254 -294l2 8l6 12l0 4l22 54l6 14l4 12l12 24l2 10l16 32l2 6l2 2l2 2l0 2l4 6l4 10l2 2l2 2l2 0l4 0M-234 -256l-8 2l-104 44l-126 54l-2 0l-8 6M-64 154l2 -2l8 -2l108 -34M-112 148l8 -4l6 -6l32 -12l4 0M-112 148l-10 4l-10 0l-170 72l-10 4M-14 -76l-2 -10l-2 -8l-4 -8l-32 -86l-6 -12l-12 -34l-26 -68l-4 -10l-2 -6l-10 -26l-34 -102l-4 -6M80 174l94 -30l-4 -18M312 -226l-18 6l-2 2l-8 2M-312 228l-8 4l-56 24M348 -64l-56 10l-70 16l-26 8l-12 2l-2 0M350 -80l4 14M358 -54l12 28l22 58l6 16M256 160l-2 2l-10 4l-150 48l-8 4M266 154l130 -34l6 -2M-70 268l6 -108l0 -6M-64 154l2 -28l6 -74l2 -16l0 -12l0 -4l0 -4l-2 -8M316 -216l8 22l2 8l2 4l2 8l16 74M-170 58l12 -6l4 -2M54 116l6 -2l146 -48l10 -2l2 0M72 176l2 0M74 176l4 -2l2 0M-370 98l6 14l24 56l28 60M-236 -92l28 64M-72 156l8 -2M-422 -14l10 -4l124 -52l52 -22l4 -6l68 -56l8 -6M348 -92l2 12M346 -100l2 8" stroke="#FBF8F1" stroke-width="7"></path>
+<path d="M142 -130l8 18M142 -130l-12 4l-24 10l-102 44l-2 0l-4 2l-8 2M110 -94l28 -12l10 -6l2 0M150 -112l4 12l6 14M0 -46l-4 -12l-6 -10M182 -28l0 2l8 16l6 16M218 64l2 8l36 88M-182 30l2 2l2 4l2 4l4 2l4 4l4 2l4 0l4 2l2 0l2 0l2 -2l4 0l50 -22l22 -10l18 -8M122 -184l16 42M160 -86l8 20M138 -142l4 12M168 -66l6 14l2 8l2 4l4 12M-84 -66l-38 16l-18 8l-38 16l-4 2l-2 2l-2 2l-2 2l-2 4l0 4l-2 2l0 4l0 4l0 4l0 4l2 2M-10 -68l-4 -8l-4 -4l-2 -2l-2 -2l-2 0l-2 0l-2 -2l-2 0l-4 0l-4 0l-4 2l-4 2l-26 12l-12 4M-56 8l12 -4l34 -14l2 -2l2 -2l4 -4l2 -4l0 -2l2 -4l0 -2l0 -6l0 -2l0 -4l0 -2l-2 -2M280 224l6 12l2 6l18 46M256 160l2 6l6 14l12 34l4 10M196 6l8 20l14 38M114 -208l8 24M100 -240l10 24l4 8M78 -300l22 60M0 -46l4 -2l4 -2l92 -40l10 -4M-190 10l-2 4l-2 4l0 2l-2 2l-4 4M-200 26l6 0l2 0l2 0l2 2l2 0l4 2M-190 10l8 20M-200 26l-22 10l-16 6l-12 6l-14 6l-10 4l-14 6l-16 6l-14 6l-8 4l-16 8l-28 10l-10 6l-24 10" stroke="#FFFFFF" stroke-width="11"></path>
+<path d="M132 -120l4 -2l4 10l-4 0l-132 56l-2 -4l0 -4l130 -56z" fill="#FFFFFF" stroke="#CDBC98" stroke-width="1"></path>
+<path d="M0 -488l4 6l2 8l14 34l6 12l8 20l14 36l18 48l10 24l24 60l8 24l4 10l20 50l6 14l4 12l6 18l6 12l18 50l2 6M174 -44l2 6l12 30l6 16l8 18l14 38l4 8l34 90l2 4l6 14l14 34M290 242l-4 -6l-4 -12l-4 -12l-14 -34l-4 -12l-2 -6l-36 -90l-2 -6l-16 -38l-14 -36M190 -10l-6 -18l-4 -12l-2 -4l-22 -56l-4 -12l-8 -20l-4 -10l-28 -72l-10 -26l-24 -62l-8 -22l-18 -50l-14 -36l-8 -20l-6 -10l-14 -36" stroke="#9A4524" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.6"></path>
+</g>
+<g font-family="DM Sans, sans-serif" font-size="9" font-weight="600" fill="#7A6B5C" letter-spacing="0.06em" text-anchor="middle">
+<text transform="translate(226 84) rotate(69)" dy="3">PALACKÉHO TŘÍDA</text>
+<text transform="translate(66 -98) rotate(-24)" dy="3">HUSITSKÁ</text>
+<text transform="translate(44 92) rotate(72)" dy="3">SLOVINSKÁ</text>
+<text transform="translate(-150 105) rotate(68)" dy="3">RUSKÁ</text>
+<text transform="translate(-39 -145) rotate(70)" dy="3">BULHARSKÁ</text>
+<text transform="translate(-61 92) rotate(-85)" dy="3">CHARVATSKÁ</text>
+<text transform="translate(-103 -94) rotate(53)" dy="3">SRBSKÁ</text>
+<text transform="translate(-198 -126) rotate(-39)" dy="3">TYRŠOVA</text>
+<text transform="translate(-223 -61) rotate(66)" dy="3">TĚŠÍNSKÁ</text>
+<text transform="translate(127 158) rotate(-18)" dy="3">PODEŠVOVA</text>
+<text transform="translate(257 -46) rotate(-14)" dy="3">MALÁTOVA</text>
+<text transform="translate(169 188) rotate(-18)" dy="3">VACKOVA</text>
+<text transform="translate(-245 162) rotate(-23)" dy="3">SVATOPLUKA ČECHA</text>
+</g>
+<text transform="translate(-92 -9) rotate(-23)" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="14" fill="#707A48">Slovanské náměstí</text>
+<g transform="translate(0 0)">
+<rect x="18" y="-42" width="146" height="40" rx="4" fill="#FBF8F1" stroke="#B39257" stroke-width="1"></rect>
+<text x="30" y="-25" font-family="Fraunces, Georgia, serif" font-size="13" font-weight="600" fill="#2A211B">Gimmi lounge café</text>
+<text x="30" y="-11" font-family="DM Sans, sans-serif" font-size="8.5" fill="#6B5E52">Slovanské nám. 2237/1</text>
+<circle r="15" fill="#2A211B" opacity="0.18" cy="3"></circle>
+<circle r="14" fill="#FBF8F1" stroke="#B5562E" stroke-width="3"></circle>
+<g transform="translate(-7 -7.3) scale(0.14)"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#5A5C26"></path></g></g>
+</g>
+<g transform="translate(-306 168)">
+<rect width="168" height="22" rx="11" fill="#FBF8F1" opacity="0.92"></rect>
+<path d="M12 11h22" stroke="#9A4524" stroke-width="1.6" stroke-dasharray="5 5" opacity="0.7"></path>
+<text x="42" y="14.5" font-family="DM Sans, sans-serif" font-size="9" fill="#4E433A">tramvaj · Palackého třída</text>
+</g>
+</svg>
+</div>
+</div>
+<div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 18px;">
+<p style="margin: 0; font-size: 11.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #F6F3E8;">Jak k&nbsp;nám</p>
+<p style="margin: 0; max-width: 40em; font-size: 15.5px; line-height: 1.6; color: #F6F3E8;">Najdete nás na východní straně Slovanského náměstí, kousek od Husitské. Tramvaj jezdí po Palackého třídě, odtud jsou to asi tři minuty pěšky.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<a href="https://www.google.com/maps/dir/?api=1&amp;destination=GIMMI%20lounge%20cafe&amp;destination_place_id=ChIJKyLQ4Q6UEkcRvyyrdI-_7aY" target="_blank" rel="noopener" class="g-btn" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px; background: #F5EFE3; color: #2A211B; font-size: 15px; font-weight: 600; text-decoration: none;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2Z"></path></svg>Navigovat</a>
+<a href="https://mapy.cz/zakladni?q=Slovansk%C3%A9%20n%C3%A1m%C4%9Bst%C3%AD%202237%2F1%2C%20Brno" target="_blank" rel="noopener" class="g-btn" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid rgba(245, 239, 227, 0.55); color: #F5EFE3; font-size: 15px; font-weight: 600; text-decoration: none;">Otevřít v&nbsp;Mapy.cz</a>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+</main>
+
+<footer style="background: #F5EFE3; color: #2A211B; border-top: 1px solid #E3D9C4; padding: clamp(44px, 6vw, 64px) 0 28px;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px 48px;">
+<div style="flex: 1 1 260px; min-width: 0;">
+<div style="display: inline-flex; align-items: center; gap: 12px;">
+<svg viewBox="0 0 100 104" width="36" height="37" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
+<span style="display: flex; flex-direction: column; line-height: 1;"><span style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 32px; color: #2A211B;">Gimmi</span><span style="margin-top: 5px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #6B5E52;">lounge café</span></span>
+</div>
+<p style="margin: 18px 0 0; max-width: 22em; font-size: 15px; line-height: 1.6; color: #6B5E52;">Stylová brněnská kavárna s&nbsp;výběrovou kávou. Všechno, co se týká kávy, milujeme.</p>
+</div>
+<div style="flex: 0 1 170px; min-width: 0;">
+<p style="margin: 0; font-size: 11.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #9A4524;">Sledujte nás</p>
+<div style="margin-top: 4px; display: flex; flex-direction: column;">
+<a href="https://www.instagram.com/gimmicafe/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: #2A211B; text-decoration: none; font-size: 15px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor"></circle></svg>Instagram</a>
+<a href="https://www.facebook.com/gimmicafe" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: #2A211B; text-decoration: none; font-size: 15px;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 21v-7.5h2.7l.4-3.1h-3.1V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4a20 20 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4v2.1H8.6v3.1h2.7V21"></path></svg>Facebook</a>
+</div>
+</div>
+</div>
+<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E3D9C4; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13px; line-height: 1.6; color: #6B5E52;">
+<p style="margin: 0;">GIMMI – cafe · Odpovědný vedoucí: Gita Dautiová · IČ 72008211 · IČP 1002381797</p>
+<p style="margin: 0;">Web: <a href="https://vojtechsvoboda.cz" target="_blank" rel="noopener" style="color: #2A211B;">vojtechsvoboda.cz</a></p>
+</div>
+</div>
+</footer>
+
+</div>
+</template>
+<a class="pitch-back" href="index.html"><span aria-hidden="true">&#8592;</span> Zpět na přehled</a>
+<style>.pitch-back{position:fixed;z-index:60;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#2A211B;color:#FBF8F1;font:600 14px/1 'DM Sans',system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 28px -12px rgba(42,33,27,.6)}.pitch-back:hover{background:#707A48;color:#fff}.pitch-back:focus-visible{outline:2px solid #B5562E;outline-offset:3px}</style>
+<script src="dc-lite.js"></script>
+<script>
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'snidane', post: 0, guests: 2, sent: false, dez: 0, lit: true, sec: null };
+  }
+
+  componentDidMount() {
+    this.clock = setInterval(() => this.forceUpdate(), 60000);
+    this.spyTimer = setTimeout(() => {
+      if (typeof IntersectionObserver === 'undefined') return;
+      const ids = ['uvod', 'dnes', 'kava', 'menu', 'dezerty', 'kavarna', 'galerie', 'kontakt'];
+      this.spy = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting && en.target.id !== this.state.sec) this.setState({ sec: en.target.id });
+        });
+      }, { rootMargin: '-35% 0px -60% 0px' });
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) this.spy.observe(el);
+      });
+    }, 400);
+  }
+
+  componentWillUnmount() {
+    if (this.clock) clearInterval(this.clock);
+    if (this.spyTimer) clearTimeout(this.spyTimer);
+    if (this.spy) this.spy.disconnect();
+  }
+
+  prague() {
+    const now = new Date();
+    try {
+      const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now);
+      const get = (type) => {
+        const part = parts.find((x) => x.type === type);
+        return part ? part.value : '';
+      };
+      const days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      const day = days[get('weekday')];
+      const mins = parseInt(get('hour'), 10) * 60 + parseInt(get('minute'), 10);
+      if (day === undefined || isNaN(mins)) throw new Error('time');
+      return { day: day, mins: mins };
+    } catch (e) {
+      return { day: now.getDay(), mins: now.getHours() * 60 + now.getMinutes() };
+    }
+  }
+
+  renderVals() {
+    const s = this.state || {};
+    const nb = ' ';
+    const K = (v) => v + nb + 'Kč';
+    const I = (name, price, desc, tip) => ({ name: name, price: price, desc: desc || '', hasDesc: !!desc, tip: !!tip });
+    const G = (title, items, note) => ({ title: title, items: items, note: note || '', hasNote: !!note });
+    const IG = (code) => 'https://www.instagram.com/gimmicafe/p/' + code + '/';
+
+    // Doplňkové písmo (tweak)
+    const fonts = {
+      fraunces: { f: "'Fraunces', Georgia, serif", s: 'italic', k: '0.72' },
+      pinyon: { f: "'Pinyon Script', cursive", s: 'normal', k: '0.92' },
+      sacramento: { f: "'Sacramento', cursive", s: 'normal', k: '1' },
+    };
+    const acc = fonts[this.props.accentFont] || fonts.fraunces;
+
+    // Otevírací doba, „právě otevřeno“ a pozdrav podle denní doby (pražský čas)
+    const p = this.prague();
+    const H = { 1: [450, 1140], 2: [450, 1140], 3: [450, 1140], 4: [450, 1140], 5: [450, 1140], 6: [510, 960] };
+    const at = ['v neděli', 'v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu'];
+    const fmt = (m) => Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0');
+    const todayHours = H[p.day];
+    let open = false;
+    let statusText = 'Zavřeno';
+    let statusShort = 'Zavřeno';
+    if (todayHours && p.mins >= todayHours[0] && p.mins < todayHours[1]) {
+      open = true;
+      statusText = 'Právě otevřeno · do ' + fmt(todayHours[1]);
+      statusShort = 'Otevřeno do ' + fmt(todayHours[1]);
+    } else if (todayHours && p.mins < todayHours[0]) {
+      statusText = 'Otevíráme dnes v ' + fmt(todayHours[0]);
+      statusShort = 'Otevíráme v ' + fmt(todayHours[0]);
+    } else {
+      for (let i = 1; i <= 7; i++) {
+        const d = (p.day + i) % 7;
+        if (H[d]) {
+          statusText = 'Zavřeno · otevíráme ' + (i === 1 ? 'zítra' : at[d]) + ' v ' + fmt(H[d][0]);
+          break;
+        }
+      }
+    }
+    const hour = Math.floor(p.mins / 60);
+    const greeting = hour < 11 ? 'Dobré ráno' : hour < 17 ? 'Krásné odpoledne' : 'Dobrý večer';
+    const hours = [
+      { label: 'Pondělí – pátek', time: '7:30 – 19:00', days: [1, 2, 3, 4, 5] },
+      { label: 'Sobota', time: '8:30 – 16:00', days: [6] },
+      { label: 'Neděle', time: 'zavřeno', days: [0] },
+    ].map((r) => {
+      const isToday = r.days.indexOf(p.day) !== -1;
+      return { label: r.label, time: r.time, today: isToday, bg: isToday ? 'rgba(245, 239, 227, 0.10)' : 'transparent', weight: isToday ? '600' : '400' };
+    });
+
+    // Vitrína: poslední nabídky z Instagramu (v ostré verzi je načte Worker sám)
+    const posts = [
+      { day: 'po', date: '19.' + nb + '10.', intro: 'Krásné pondělní ráno z' + nb + 'Gimmi!', items: ['Šneci pistácie a' + nb + 'maliny', 'Roláda s' + nb + 'pařížským krémem', 'Tiramisu', 'Štrúdl s' + nb + 'tvarohem'], soup: 'Batátový krém', url: IG('Deq8rHyjpL_'), img: 'img/post-1910.jpg', alt: 'Čokoládové dortíčky s malinami a banánovými chipsy' },
+      { day: 'čt', date: '15.' + nb + '10.', intro: 'Krásný čtvrtek, přátelé!', items: ['Věnečkový dort', 'Pistáciové tartaletky', 'Koláčky s' + nb + 'tvarohem', 'Frgál s' + nb + 'hruškami', 'Roláda à' + nb + 'la Míša dort'], soup: 'Kulajda', url: IG('DegNnZhufjm'), img: 'img/post-1510.jpg', alt: 'Pistáciové tartaletky s malinami a rohlíčky' },
+      { day: 'po', date: '21.' + nb + '9.', intro: 'Další týden je tu!', items: ['Pistáciový cheesecake', 'Šneci maliny a' + nb + 'pistácie', 'Sněhové pusinky', 'Rohlíčky s' + nb + 'tvarohem', 'Quiche se slaninou a' + nb + 'cibulkou'], soup: 'Polévka z' + nb + 'pečených paprik a' + nb + 'rajčat', url: IG('Ddi9SiAjkyA'), img: 'img/post-2109.jpg', alt: 'Šneci s malinami a pistáciemi' },
+      { day: 'po', date: '14.' + nb + '9.', intro: 'Krásné pondělí z' + nb + 'Gimmi!', items: ['Mrkvánky s' + nb + 'povidly', 'Kokosovo-malinová roláda', 'Špenátový quiche'], soup: 'Krém z' + nb + 'červené řepy', url: IG('DdQxtiOuNSG'), img: 'img/post-1409.jpg', alt: 'Krémové dortíčky s malinami na baru kavárny' },
+    ];
+    const sel = Math.min(posts.length - 1, Math.max(0, s.post || 0));
+    const post = posts[sel];
+    const pills = posts.map((x, i) => {
+      const on = i === sel;
+      return { label: x.day + ' ' + x.date, on: on, img: x.img, pick: () => this.setState({ post: i }), ring: on ? '#FFFFFF' : 'rgba(255, 255, 255, 0.25)', op: on ? '1' : '0.7' };
+    });
+    const vitrineKicker = sel === 0 ? 'dnes ve vitríně' : 've vitríně ' + post.date;
+
+    // Menu (přepsané z PDF jídelního lístku)
+    const menu = {
+      snidane: {
+        intro: 'Snídaně podáváme po celý den. Připravujeme je z' + nb + 'vajec z' + nb + 'farmy Vajiska, uzenin z' + nb + 'Prostě maso a' + nb + 'dalších kvalitních surovin.',
+        groups: [
+          G('Vejce', [
+            I('Sázená vejce', K('159'), 'se slaninou nebo šunkou'),
+            I('Míchaná vejce na másle a' + nb + 'zelené cibulce', K('125')),
+            I('Míchaná vejce', K('159'), 'se sýrem, šunkou nebo slaninou'),
+            I('Omeleta', K('165'), 'vaječná, nebo jen z' + nb + 'bílků (FIT) se sýrem · žampionová, slaninová, šunková, s' + nb + 'rajčátky nebo s' + nb + 'kozím sýrem'),
+            I('3 vejce do skla', K('135')),
+            I('3 vejce do skla s' + nb + 'holandskou omáčkou', K('185'), 'opečená slanina, klíčky'),
+            I('Turecká vejce', K('179'), 'Gimmi jogurt, česnek, kopr, chilli máslo, 2' + nb + 'vejce naměkko'),
+            I('Porce navíc', K('55'), 'šunka, sýr, avokádo, kozí sýr nebo slanina'),
+          ]),
+          G('Flaguette', [
+            I('S' + nb + 'vejci a' + nb + 'sýrem', K('205'), 'volská oka'),
+            I('Se šunkou a' + nb + 'sýrem', K('205'), 'gouda, šunka'),
+            I('Mozzarella, rajčata a' + nb + 'bylinky', K('205')),
+            I('Speciál', K('205'), 'slanina, gouda, vejce'),
+          ], 'Italský křupavý sendvič s' + nb + 'majonézou, ledovým salátkem a' + nb + 'zeleninou. Bezlepková varianta +10' + nb + 'Kč.'),
+          G('Na talíři', [
+            I('Chléb Avokádo', K('249'), 'míchaná vejce se sýrem, majonéza, avokádo, salátek, klíčky', true),
+            I('Chléb Avokádo speciál', K('249'), 'míchaná vejce se sýrem, majonéza, avokádo, slanina, klíčky', true),
+            I('Quiche', K('179'), 'dle denní nabídky, s' + nb + 'domácím jogurtem a' + nb + 'salátkem', true),
+            I('Anglická snídaně', K('249'), 'slanina, klobása, 2' + nb + 'volská oka, žampiony, fazole'),
+            I('Vegetariánská anglická snídaně', K('249'), '2' + nb + 'volská oka, žampiony, kozí sýr, sezónní salát, fazole'),
+            I('Ohřívaná klobáska s' + nb + 'hořčicí', K('165'), '96' + nb + '% masa'),
+            I('Pomazánka vlastní výroby', K('79')),
+            I('Kváskový chléb Bread Guy', K('35'), 'řemeslný, porce'),
+            I('Polévka dle denní nabídky', K('89'), 'většinou k' + nb + 'obědu'),
+          ]),
+          G('Sezónní nabídka', [
+            I('Chléb Tuňák-avokádo', K('249'), 'tuňák, salátek, avokádo, kari majonéza, volská oka, klíčky'),
+            I('Buchtičky s' + nb + 'krémem', K('199')),
+          ]),
+        ],
+      },
+      sladke: {
+        intro: 'Sladké snídaně i' + nb + 'dezerty jsou všechny vlastní výroby.',
+        groups: [
+          G('Sladké snídaně', [
+            I('Jáhlová kaše', K('145'), 'datlový sirup, semínka, ovoce · z' + nb + 'alternativního mléka +20' + nb + 'Kč'),
+            I('Gimmi jogurt', K('129 / 169'), 'ořechy, ovoce, med · malý / velký · vyrábíme z' + nb + '12% smetany a' + nb + 'živé jogurtové kultury', true),
+            I('Francouzský toast', K('239'), 'vánočka na skořicovém másle, Gimmi jogurt, ovoce'),
+            I('Palačinka s' + nb + 'domácím pribináčkem', K('95')),
+          ]),
+          G('Z' + nb + 'vitríny', [
+            I('Bábovky, koláče a' + nb + 'dezerty', 'dle nabídky', 'co pečeme, ukazujeme níž v' + nb + 'sekci Dezerty'),
+          ]),
+        ],
+      },
+      kava: {
+        intro: 'Mlýnek 1: Bar speciale (arabica s' + nb + 'robustou 80/20, tmavě pražená). Mlýnek 2: výběrová 100% arabica z' + nb + 'českých pražíren.',
+        groups: [
+          G('Káva z' + nb + 'obou mlýnků', [
+            I('Espresso / espresso lungo', K('62')),
+            I('Doppio', K('84')),
+            I('Batch brew', K('40 / 79'), '100 / 200' + nb + 'ml'),
+            I('Latte', K('82')),
+            I('Cappuccino', K('78')),
+            I('Cappuccino grande', K('119'), 'dvojité'),
+            I('Espresso prodloužené se šlehačkou', K('98')),
+            I('Flat white', K('98')),
+            I('Latte / cappuccino s' + nb + 'alternativním mlékem', K('92')),
+          ], 'Alternativní mléko k' + nb + 'ostatním kávám +20' + nb + 'Kč'),
+          G('Bez kofeinu', [
+            I('Bezkofeinová káva', K('64')),
+            I('Bezkofeinové latte / cappuccino', K('84')),
+          ]),
+          G('Sezónně', [
+            I('Pumpkin spice latte', K('92'), 'podzimní dýňové latte s' + nb + 'kořením', true),
+          ]),
+          G('Další teplé nápoje', [
+            I('Chai latte / matcha latte', K('98')),
+            I('Horká mléčná čokoláda se šlehačkou', K('88'), 's' + nb + 'kokosem, oříšky nebo se skořicí'),
+            I('Kakao', K('75')),
+            I('Našlehané mléko', K('25 / 45')),
+          ]),
+        ],
+      },
+      napoje: {
+        intro: 'Limonády děláme z' + nb + 'vlastních sirupů, fresh lisujeme čerstvě.',
+        groups: [
+          G('Limonády', [
+            I('Limonáda dle aktuální nabídky', K('59 / 89'), 'z' + nb + 'vlastních sirupů · 0,25 / 0,5' + nb + 'l'),
+            I('Americká limonáda', K('95'), 's' + nb + 'ovocem · 0,5' + nb + 'l'),
+            I('Kombuchová limonáda', K('95'), '0,4' + nb + 'l'),
+            I('Matcha limonáda', K('139'), '0,4' + nb + 'l'),
+            I('Matcha fresh', K('139'), '0,2' + nb + 'l'),
+            I('Ledová máta nebo čaj', K('59 / 85'), 'sezónně · 0,25 / 0,5' + nb + 'l'),
+          ]),
+          G('Fresh', [
+            I('Pomeranč, grep', K('95'), 'lze kombinovat · 0,2' + nb + 'l'),
+            I('Fresh voda', K('85'), 'pomeranč, grep, citron · 0,4' + nb + 'l'),
+          ]),
+          G('Čaje', [
+            I('Čerstvá máta, zázvor', K('85')),
+            I('Černý čaj Oxalis', K('85')),
+            I('Ovocná směs Oxalis', K('85')),
+            I('Bylinná směs Oxalis', K('85')),
+            I('Zelený čaj s' + nb + 'jasmínem Oxalis', K('85')),
+          ], 'Přírodní sypané čaje, lze kombinovat.'),
+          G('Nealko', [
+            I('Filtrovaná voda / soda z' + nb + 'kohoutku', K('29 / 39'), '0,5' + nb + 'l'),
+            I('Sklenice vody / sody', K('20 / 30')),
+            I('Coca-Cola / Zero', K('62'), '0,33' + nb + 'l'),
+            I('Tonic', K('62'), '0,25' + nb + 'l'),
+            I('Bio mošt jablečný', K('30'), '100' + nb + '%, čistý · 0,1' + nb + 'l'),
+          ]),
+        ],
+      },
+      bar: {
+        intro: 'Víno, aperitivy a' + nb + 'destiláty.',
+        groups: [
+          G('Víno', [
+            I('Bílé rozlévané', K('69'), '0,1' + nb + 'l'),
+            I('Červené rozlévané', K('89'), '0,1' + nb + 'l'),
+            I('Vinný střik 1:1', K('79'), '0,2' + nb + 'l'),
+            I('Prosecco', K('95'), '0,1' + nb + 'l'),
+          ]),
+          G('Aperitivy', [
+            I('Aperol / Hugo Spritz', K('155'), '0,25' + nb + 'l'),
+            I('Mimosa', K('129'), '0,2' + nb + 'l'),
+            I('Gin Tonic', K('155'), '0,25' + nb + 'l'),
+            I('Martini dry / bianco', K('75'), '0,05' + nb + 'l'),
+          ]),
+          G('Destiláty', [
+            I('Slivovice', K('85')),
+            I('Bucanero', K('95')),
+            I('Fernet / Becherovka', K('75')),
+            I('Metaxa *****', K('95')),
+            I('Gin Beefeater', K('85')),
+            I('Jameson', K('85')),
+          ], 'Všechny destiláty podáváme po 0,04' + nb + 'l.'),
+        ],
+      },
+    };
+    const tabDefs = [['snidane', 'Snídaně'], ['sladke', 'Sladké'], ['kava', 'Káva'], ['napoje', 'Nápoje'], ['bar', 'Víno a' + nb + 'bar']];
+    const tab = menu[s.tab] ? s.tab : 'snidane';
+    const tabs = tabDefs.map((d) => {
+      const on = d[0] === tab;
+      return { label: d[1], on: on, pick: () => this.setState({ tab: d[0] }), bg: on ? '#2A211B' : 'transparent', fg: on ? '#FBF8F1' : '#2A211B', border: on ? '#2A211B' : '#CFC5AE' };
+    });
+
+    // Dezerty: karusel z Instagramu
+    const dez = [
+      { title: 'Čokoládové dortíčky s' + nb + 'malinami', date: '9.' + nb + '9.' + nb + '2026', img: 'img/dez-cupcakes.jpg', url: IG('DdD1s9Auww-') },
+      { title: 'Šneci maliny a' + nb + 'pistácie', date: '21.' + nb + '9.' + nb + '2026', img: 'img/post-2109.jpg', url: IG('Ddi9SiAjkyA') },
+      { title: 'Krémové dortíčky s' + nb + 'borůvkami', date: '2.' + nb + '9.' + nb + '2026', img: 'img/dez-pavlova.jpg', url: IG('Dcx8O_zjvxr') },
+      { title: 'Větrníčky s' + nb + 'ovocem', date: '11.' + nb + '9.' + nb + '2026', img: 'img/dez-venecky.jpg', url: IG('DdIwKw1jiq4') },
+      { title: 'Dort s' + nb + 'karamelovými větrníčky', date: '31.' + nb + '8.' + nb + '2026', img: 'img/dez-dort.jpg', url: IG('Dcsq4mHjq3h') },
+      { title: 'Sněhové pusinky s' + nb + 'ovocem', date: '21.' + nb + '9.' + nb + '2026', img: 'img/dez-sneci.jpg', url: IG('Ddi9SiAjkyA') },
+      { title: 'Dortíčky s' + nb + 'krémem a' + nb + 'karamelem', date: '29.' + nb + '8.' + nb + '2026', img: 'img/dez-pusinky.jpg', url: IG('DcnHWqKiLdt') },
+      { title: 'Buchtičky s' + nb + 'borůvkami', date: '29.' + nb + '8.' + nb + '2026', img: 'img/dez-buchty.jpg', url: IG('DcnHWqKiLdt') },
+    ];
+    const dezMax = dez.length - 2;
+    const di = Math.min(dezMax, Math.max(0, s.dez || 0));
+
+    // Galerie: posledních 6 příspěvků z Instagramu
+    const gallery = [
+      { date: '6.' + nb + '10.' + nb + '2026', title: 'Buchtičky s' + nb + 'krémem jsou zpět', ratio: '3 / 4', img: 'img/g-havel-dezert.jpg', url: IG('DeJ2hE7joYL') },
+      { date: '6.' + nb + '10.' + nb + '2026', title: 'Chléb s' + nb + 'tuňákem, vajíčkem a' + nb + 'avokádem', ratio: '3 / 4', img: 'img/g-chleb.jpg', url: IG('DeJ2hE7joYL') },
+      { date: '5.' + nb + '10.' + nb + '2026', title: 'Dnes vzpomínáme. Václav Havel (90)', ratio: '1 / 1', img: 'img/g-havel.jpg', url: IG('DeG7ldoDoHB') },
+      { date: '2.' + nb + '9.' + nb + '2026', title: 'Šneci a' + nb + 'káva z' + nb + 'Keni', ratio: '4 / 5', img: 'img/g-kava-kenya.jpg', url: IG('Dcx8O_zjvxr') },
+      { date: '2.' + nb + '9.' + nb + '2026', title: 'Polévka dne s' + nb + 'kváskovým chlebem', ratio: '4 / 5', img: 'img/g-polevka.jpg', url: IG('Dcx8O_zjvxr') },
+      { date: '10.' + nb + '3.' + nb + '2026', title: 'Anglická snídaně', ratio: '3 / 4', img: 'img/g-snidane.jpg', url: IG('DVs9kS7iB0W') },
+    ];
+
+    // Rezervace
+    const g = s.guests || 2;
+    const guestsLabel = g === 1 ? 'osoba' : g <= 4 ? 'osoby' : 'osob';
+
+    return {
+      accFamily: acc.f,
+      accStyle: acc.s,
+      accScale: acc.k,
+      greeting: greeting,
+      statusText: statusText,
+      statusShort: statusShort,
+      statusDot: open ? '#5E8C3A' : '#C0623A',
+      statusHalo: open ? 'rgba(94, 140, 58, 0.18)' : 'rgba(192, 98, 58, 0.16)',
+      hours: hours,
+      post: post,
+      pills: pills,
+      vitrineKicker: vitrineKicker,
+      tabs: tabs,
+      active: menu[tab],
+      dez: dez,
+      dezShift: 'calc(' + (-di) + ' * (min(260px, 68vw) + 24px))',
+      dezAtStart: di <= 0,
+      dezAtEnd: di >= dezMax,
+      dezPrev: () => this.setState({ dez: Math.max(0, di - 1) }),
+      dezNext: () => this.setState({ dez: Math.min(dezMax, di + 1) }),
+      gallery: gallery,
+      nav: [['dnes', 'Vitrína'], ['kava', 'Káva'], ['menu', 'Menu'], ['dezerty', 'Dezerty'], ['kavarna', 'Kavárna'], ['galerie', 'Galerie'], ['kontakt', 'Kontakt']].map((n) => ({
+        href: '#' + n[0],
+        label: n[1],
+        cur: s.sec === n[0] ? 'true' : 'false',
+        go: (e) => {
+          const el = document.getElementById(n[0]);
+          if (el && el.scrollIntoView) {
+            if (e && e.preventDefault) e.preventDefault();
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          this.setState({ sec: n[0] });
+        },
+      })),
+      lustrLit: s.lit !== false,
+      lustrGlow: s.lit !== false ? '1' : '0',
+      lustrFlame: s.lit !== false ? '1' : '0',
+      lustrLabel: s.lit !== false ? 'Zhasnout lustr' : 'Rozsvítit lustr',
+      lustrHint: s.lit !== false ? 'Klikněte a zhasněte' : 'Klikněte a rozsviťte',
+      toggleLustr: () => this.setState({ lit: s.lit === false }),
+      showReservation: this.props.showReservation ?? true,
+      guests: g,
+      guestsLabel: guestsLabel,
+      dec: () => this.setState({ guests: Math.max(1, g - 1) }),
+      inc: () => this.setState({ guests: Math.min(20, g + 1) }),
+      sent: !!s.sent,
+      formOpen: !s.sent,
+      submit: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        this.setState({ sent: true });
+      },
+      reset: () => this.setState({ sent: false, guests: 2 }),
+    };
+  }
+}
+
+mountDC(document.getElementById("app"), document.getElementById("tpl"), Component, {});
+</script>
+</body>
+</html>
