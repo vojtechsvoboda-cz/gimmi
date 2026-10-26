@@ -17,7 +17,10 @@
 .tile { display: grid; gap: 14px; justify-items: center; color: var(--ink); text-decoration: none; }
 .tile .card { width: 100%; aspect-ratio: 4 / 3; max-width: 100%; border-radius: 22px; background: var(--paper); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
 .tile:hover .card { transform: translateY(-6px) scale(1.01); box-shadow: 0 34px 50px -34px rgba(42, 33, 27, 0.55); }
-.tile span.l { font-size: 16px; font-weight: 600; letter-spacing: .01em; }
+.tile { gap: 4px; }
+.tile .card { margin-bottom: 12px; }
+.tile span.l { font-family: var(--display); font-size: 24px; line-height: 1.2; }
+.tile span.d { font-size: 14.5px; color: var(--muted); }
 .tile:hover span.l { color: var(--green-ink); }
 .tile .c-web { background: #EFE7D6; }
 .c-web .frame { width: 74%; padding: 7px; background: var(--gold); box-shadow: 0 24px 34px -24px rgba(42,33,27,.7); transform: rotate(-1.5deg); }
@@ -38,6 +41,11 @@
 .c-price .p i:nth-child(1) { height: clamp(70px, 11vw, 100px); }
 .c-price .p i:nth-child(2) { height: clamp(96px, 15vw, 136px); background: var(--green); border-color: var(--green); }
 .c-price .p i:nth-child(3) { height: clamp(82px, 13vw, 118px); }
+.facts { list-style: none; margin: 0 auto; padding: 22px 0 0; max-width: 980px; width: 100%; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; text-align: center; }
+@media (max-width: 620px) { .facts { grid-template-columns: minmax(0, 1fr); } }
+.facts li { display: grid; gap: 2px; }
+.facts b { font-weight: 600; font-size: 15px; }
+.facts span { font-size: 14px; color: var(--muted); }
 .by { text-align: center; font-size: 13px; color: var(--muted); }
 .by a { color: var(--muted); }
 </style>
@@ -45,15 +53,20 @@
 <body>
 <main class="wrap home">
 <div class="brand">
-<svg viewBox="0 0 100 104" width="40" height="42" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#F5EFE3" stroke-width="4"></path></g></svg>
-<h1>Gimmi</h1>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Gimmi – návrh webu</h1>
+<svg viewBox="0 0 264 168" width="119" height="76" aria-hidden="true"><path d="M86 16A30 30 0 0 0 86 76Z" fill="#B5562E"></path><path d="M86 16A30 30 0 0 1 86 76Z" fill="#707A48"></path><rect x="82.5" y="14" width="7" height="106" fill="#2A211B"></rect><text x="18" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="52" lengthAdjust="spacingAndGlyphs">G</text><text x="99" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="150" lengthAdjust="spacingAndGlyphs">MMI</text><text x="14" y="158" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="38" font-weight="400" fill="#5A5C26" textLength="234" lengthAdjust="spacingAndGlyphs">lounge cafe</text></svg>
 </div>
 <nav class="tiles" aria-label="Části návrhu">
-<a class="tile" href="web.html"><span class="card c-web"><span class="frame"><div><img src="img/hero-tartaletky.jpg" alt=""></div></span></span><span class="l">Web</span></a>
-<a class="tile" href="logo.html"><span class="card c-logo"><svg viewBox="0 0 100 104" width="96" height="100" aria-hidden="true"><g transform="rotate(-18 50 52)"><path d="M50 0A40 52 0 0 0 50 104C70 74 30 30 50 0Z" fill="#B5562E"></path><path d="M50 0A40 52 0 0 1 50 104C70 74 30 30 50 0Z" fill="#707A48"></path><path d="M50 0C30 30 70 74 50 104" fill="none" stroke="#FBF8F1" stroke-width="3"></path></g></svg></span><span class="l">Logo</span></a>
-<a class="tile" href="admin.html"><span class="card c-admin"><span class="ui" aria-hidden="true"><span class="s"><i></i><i></i><i></i><i></i></span><span class="m"><i></i><i></i><i></i><i></i></span></span></span><span class="l">Administrace</span></a>
-<a class="tile" href="balicky.html"><span class="card c-price"><span class="p" aria-hidden="true"><i></i><i></i><i></i></span></span><span class="l">Balíčky a ceny</span></a>
+<a class="tile" href="web.html"><span class="card c-web"><span class="frame"><div><img src="img/hero-tartaletky.jpg" alt=""></div></span></span><span class="l">Web</span><span class="d">Celý návrh na proklikání</span></a>
+<a class="tile" href="logo.html"><span class="card c-logo"><svg viewBox="0 0 264 168" width="204" height="130" aria-hidden="true"><path d="M86 16A30 30 0 0 0 86 76Z" fill="#B5562E"></path><path d="M86 16A30 30 0 0 1 86 76Z" fill="#707A48"></path><rect x="82.5" y="14" width="7" height="106" fill="#2A211B"></rect><text x="18" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="52" lengthAdjust="spacingAndGlyphs">G</text><text x="99" y="120" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="400" fill="#2A211B" textLength="150" lengthAdjust="spacingAndGlyphs">MMI</text><text x="14" y="158" font-family="'DM Sans', 'Segoe UI', system-ui, sans-serif" font-size="38" font-weight="400" fill="#5A5C26" textLength="234" lengthAdjust="spacingAndGlyphs">lounge cafe</text></svg></span><span class="l">Logo</span><span class="d">Vaše logo jako ostrý vektor</span></a>
+<a class="tile" href="admin.html"><span class="card c-admin"><span class="ui" aria-hidden="true"><span class="s"><i></i><i></i><i></i><i></i></span><span class="m"><i></i><i></i><i></i><i></i></span></span></span><span class="l">Administrace</span><span class="d">Menu, otevírací doba, poukazy</span></a>
+<a class="tile" href="balicky.html"><span class="card c-price"><span class="p" aria-hidden="true"><i></i><i></i><i></i></span></span><span class="l">Balíčky a ceny</span><span class="d">Co je v ceně a kolik to stojí</span></a>
 </nav>
+<ul class="facts" aria-label="Jak to funguje">
+<li><b>Hotové do 4 týdnů</b><span>návrh už je připravený</span></li>
+<li><b>Úpravy do 3 pracovních dnů</b><span>napíšete, udělám</span></li>
+<li><b>Nebo si to upravíte sama</b><span>v jednoduché administraci</span></li>
+</ul>
 <p class="by"><a href="https://vojtechsvoboda.cz" target="_blank" rel="noopener">vojtechsvoboda.cz</a></p>
 </main>
 </body>
